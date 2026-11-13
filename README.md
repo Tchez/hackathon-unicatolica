@@ -10,7 +10,7 @@ Esta entrega reúne o repositório no GitHub e a documentação da ideia no Noti
 
 | Onde encontrar | Conteúdo |
 |---|---|
-| [Documentação no Notion](https://app.notion.com/p/Hackathon-doc-base-41778f6a5d5580d3b202e2914f76fc40?source=copy_link) | Documento da ideia elaborado pela equipe |
+| [Documentação no Notion](https://cute-felidae-d88.notion.site/Proposta-de-solu-o-41778f6a5d55809f9337f0b2172416ef) | Documento da ideia elaborado pela equipe |
 | [Proposta detalhada neste repositório](docs/solucao.md) | Solução, funcionalidades discutidas, decisões, perguntas em aberto e riscos |
 
 ## Desafio 05

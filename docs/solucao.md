@@ -4,7 +4,7 @@
 
 [Voltar ao README](../README.md) · [Documento da equipe no Notion](https://app.notion.com/p/Hackathon-doc-base-41778f6a5d5580d3b202e2914f76fc40?source=copy_link)
 
-Este documento organiza a ideia da equipe para a primeira fase do Hackathon Unicatólica. Funcionalidades e critérios de demonstração descrevem uma proposta futura, não recursos implementados. Os identificadores do documento-base foram preservados para facilitar a referência entre as discussões.
+Este documento organiza a ideia da equipe para a primeira fase do Hackathon Unicatólica. Funcionalidades e critérios de demonstração descrevem uma proposta futura, não recursos implementados.
 
 | Status | Significado |
 |---|---|
