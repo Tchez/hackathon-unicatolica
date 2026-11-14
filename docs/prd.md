@@ -71,7 +71,7 @@ Em aberto: priorizar visitantes novos ou ocasionais, ou recompensar os frequente
 |---|---|---|---|---|---|
 | F06 | Campanhas recorrentes com ofertas limitadas e liberação de lotes | 1 | **Must** | Confirmado; calendário em aberto (Q12) | Campanha em data como 11/11, com as lojas e ofertas daquela edição; lotes liberados, inclusive em horário surpresa; aviso aos presentes; limite respeitado |
 | F16 | Ofertas relâmpago criadas pelo lojista | 1 | **Must** | Confirmado; uso opcional pela loja | Criar pelo celular em menos de um minuto, com desconto, duração e limite; mostrar prazo e quantidade restante; encerrar ao expirar ou esgotar |
-| F01 | Comprovação e registro de compra | 2 | **Must** | Confirmado; método em aberto (Q02) | Identificar loja e valor, registrar no histórico e impedir o registro duplicado do mesmo comprovante |
+| F01 | Comprovação e registro de compra | 2 | **Must** | Confirmado; código de compra (D12) | Identificar loja e valor, registrar no histórico e impedir o registro duplicado do mesmo comprovante |
 | F02 | Pontos proporcionais ao valor da compra | 2 | **Must** | Confirmado; taxa em aberto (Q03) | Atualizar o saldo após o registro; compras de menor valor também pontuam |
 | F03 | Saldo e troca de pontos por desconto | 2 | **Must** | Confirmado | Cupom gerado aparece em "Meus cupons" |
 | F23 | Estacionamento como resgate de pontos | 2 | **Must** | Confirmado | Trocar pontos por desconto ou isenção; limitar o resgate, porque estacionamento é receita do shopping |
@@ -150,6 +150,9 @@ Decisões técnicas ficam no [SDD](sdd.md#8-decisões-técnicas).
 | D08 | Campanhas em datas marcantes com ofertas limitadas de destaque e outras promoções | Data fixa; promoções e lojas variam por edição |
 | D09 | Marketing e divulgação são pilar, com influenciadores, comunidades e indicação | Sem divulgação, as campanhas não funcionam |
 | D10 | Escopo revisado em 13/11, priorizado em MoSCoW neste documento | Fluxo campanha → compra → pontos → resgate, com indicação |
+| D11 | Visitante, lojista e administração do shopping usam a mesma aplicação, com o perfil escolhido no login | Login simulado no MVP (F04) |
+| D12 | Compra comprovada por código de uso único, como o código de entrega do iFood: o visitante gera no app, informa no caixa, e o lojista digita o código e o valor | O valor vem da loja e o código não se reutiliza. A chave da NFC-e foi descartada: valida loja e duplicidade, mas o valor exige o portal da SEFAZ, que tem captcha |
+| D13 | A solução é um módulo dentro do app que o shopping já tem, não um app novo. A demonstração usa o visual do app do Capim Dourado, o piloto; as cores ficam num tema configurável | Ninguém instala outro app; aproveita conta, cupons e pagamento de estacionamento existentes; continua valendo para outros shoppings (D01). A integração real depende do fornecedor do app |
 
 ## 9. Métricas de sucesso
 
@@ -172,7 +175,7 @@ Integrações com aplicativos de shopping, consulta de notas e detecção de pre
 | Escopo amplo | Demonstração incompleta | Must primeiro; Should e Could só depois do fluxo principal |
 | Oferta de destaque atrair público sem gerar outras compras | Campanha não compensa | Medir compras fora da oferta principal |
 | Efeito da campanha acabar no dia; surpresa perder força | Visitas não se repetem | Ligar cada campanha a pontos; variar o formato |
-| Reutilização de comprovantes ou compras de terceiros | Pontos indevidos | Validação e bloqueio de duplicidade (Q02) |
+| Reutilização de comprovantes ou compras de terceiros | Pontos indevidos | Código de uso único confirmado pelo lojista (D12) |
 | Autoindicação e contas falsas | Pontos indevidos | Bônus na primeira compra comprovada; um bônus por indicado |
 | Baixa adesão dos lojistas ou custo dos descontos | Faltam benefícios | Validar o financiamento (Q04); F14 em pesquisa |
 | Estacionamento como resgate reduzir receita | Veto da administração | Limitar o resgate (F23) |
@@ -187,8 +190,6 @@ Integrações com aplicativos de shopping, consulta de notas e detecção de pre
 
 | ID | Questão | Por que importa |
 |---|---|---|
-| Q01 | Aplicativo próprio ou integração ao do shopping? O lojista usa a mesma solução ou um painel separado? | Define o formato da experiência |
-| Q02 | Como comprovar compras: QR da NFC-e, QR gerado no caixa ou outro método? | A chave de 44 dígitos do QR da NFC-e traz estado, ano e mês, CNPJ da loja e número: valida a loja e bloqueia nota repetida sem consultar a SEFAZ. Valor e itens exigem o portal (com captcha) ou a leitura da foto. Atenção: nota sem CPF, estorno depois da pontuação, notas descartadas recolhidas por outros |
 | Q03 | Regra de geração e resgate de pontos, inclusive estacionamento e indicação | Discutidos: R$ 1.000 → 10 pontos, R$ 1.000 → 100 pontos, 1% de cashback, resgate a partir de 500 pontos. Nenhuma aprovada |
 | Q04 | Quem financia cada desconto: shopping, lojista ou ambos? | Na oferta de destaque, quem dá o desconto não fica com as vendas das outras lojas. Alternativas: fundo de promoção, rateio entre participantes, F14, F32 |
 | Q05 | Nomes dos níveis, se adotados | Exemplos para o Capim Dourado: Semente → Broto → Haste → Capim Dourado; Pequi → Buriti → Ipê Amarelo → Sol do Cerrado; Visitante → Frequentador → De Casa → Patrimônio do Capim |
@@ -200,6 +201,7 @@ Integrações com aplicativos de shopping, consulta de notas e detecção de pre
 | Q11 | Limite de notificações por dia ou por usuário | Evita abandono |
 | Q12 | Calendário das campanhas e definição de horários, lotes, lojas e condições | Datas de dia e mês iguais caem em dias diferentes da semana (12/12/2026 é sábado), e no fim de semana o shopping costuma estar cheio |
 | Q13 | Quem coordena e financia a divulgação; quais canais e influenciadores | Sustenta o alcance das campanhas e da indicação |
+| Q14 | Validade do código de compra | Curta dificulta o uso por terceiros; longa evita pressa no caixa |
 
 ## 12. Demonstração
 
