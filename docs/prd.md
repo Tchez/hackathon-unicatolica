@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| **Status** | MVP implementado (specs 001 a 007); versão online pendente; entrega em 14/11/2026 até 12h |
+| **Status** | MVP implementado (specs 001 a 009); versão online pendente; entrega em 14/11/2026 até 12h |
 | **Entrega** | Sábado, 14/11/2026, até as 12h: MVP funcional, repositório, documentação e instruções de execução, com o Easter Egg demonstrável |
 | **Prioridade** | [MoSCoW](https://www.agilebusiness.org/dsdm-project-framework/moscow-prioritisation.html): **Must** (núcleo do MVP), **Should** e **Could** (bônus, nessa ordem), **Won't** (fora desta entrega) |
 
@@ -77,7 +77,7 @@ Em aberto: priorizar visitantes novos ou ocasionais, ou recompensar os frequente
 | F23 | Estacionamento como resgate de pontos | 2 | **Must** | Confirmado | Trocar pontos por desconto ou isenção; limitar o resgate, porque estacionamento é receita do shopping |
 | F27 | Programa de indicação, com código por usuário, influenciador ou comunidade | 4 | **Must** | Confirmado; momento do bônus em aberto | Quem indica e quem é indicado ganham pontos de bônus (incorpora a antiga F21, bônus no cadastro); liberar na primeira compra comprovada reduz contas falsas |
 | F04 | Conta do usuário | Base | **Must** | Confirmado (login simulado, D11) | Vincular saldo, resgates e indicações a um usuário; login simples ou simulado |
-| F07 | Votação entre opções fechadas, com resultado refletido na programação | 3 | Should | Confirmado como parte do pilar 3 | Um voto por usuário; só votar o que o shopping vai cumprir; risco de captura por grupos organizados |
+| F07 | Votação entre opções fechadas, com resultado refletido na programação | 3 | Should | Confirmado como parte do pilar 3; versão mínima implementada (SPEC 009) | Um voto por usuário; só votar o que o shopping vai cumprir; risco de captura por grupos organizados |
 | F09 | Eventos escolhidos com participação das comunidades, com eventual brinde | 3 | Should | Confirmado como parte do pilar 3 | Depende da operação do shopping |
 | F30 | Encontros em datas marcantes, como finais de campeonato e festividades, com brindes durante o evento | 3 | Should | Proposto | Efeito acaba com o evento; bebida alcoólica exige controle de idade e opção sem álcool; brinde condicionado a compra com estoque limitado pode exigir autorização federal |
 | F31 | Votações sobre eventos e decisões do shopping, como tema da decoração ou próxima atração | 3 | Should | Proposto | Mesmos riscos da F07 |
@@ -142,7 +142,7 @@ Decisões técnicas ficam no [SDD](sdd.md#8-decisões-técnicas).
 |---|---|---|
 | D01 | Atender ao Desafio 05 para shopping centers em geral | Capim Dourado é exemplo, não restrição |
 | D02 | Pilares por prioridade: campanhas recorrentes (foco), pontos, marketing; pertencimento é bônus | Concentrar o MVP no que atrai e traz de volta |
-| D03 | Votação entre opções fechadas para decidir a programação | Vale se o pilar 3 for feito |
+| D03 | Votação entre opções fechadas para decidir a programação | Vale se o pilar 3 for feito; versão mínima implementada (SPEC 009) |
 | D04 | Relatos de incidentes exigem fatos e evidências | Vale se a F10 for feita |
 | D05 | Separar decisões de possibilidades | Evitar que sugestões virem compromissos |
 | D06 | Ofertas relâmpago criadas pelo lojista, com aviso a quem está no shopping ou perto | Uso opcional pela loja, para horários fracos |

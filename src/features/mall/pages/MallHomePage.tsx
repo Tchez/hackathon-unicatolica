@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { SimulatedBadge } from '../../../components/SimulatedBadge'
 import { formatCountdown, formatCurrency, formatDate } from '../../../lib/format'
 import { useOffersStore } from '../../offers/offersStore'
+import { PollResultsCard } from '../components/PollResultsCard'
 import { MetricCard } from '../components/MetricCard'
 import { OfferReleaseCard } from '../components/OfferReleaseCard'
 import { getCurrentCampaign } from '../mallCampaigns'
@@ -67,6 +68,13 @@ export function MallHomePage() {
           )}
         </div>
       )}
+
+      <div className="flex flex-col gap-3">
+        <h2 className="font-semibold">Votação da programação</h2>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <PollResultsCard now={now} onClosed={refresh} />
+        </div>
+      </div>
 
       <div className="flex flex-col gap-3">
         <h2 className="font-semibold">Números agregados</h2>

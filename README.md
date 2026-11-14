@@ -4,7 +4,7 @@
 
 Uma proposta para fortalecer o relacionamento entre shopping centers e seus visitantes por meio de campanhas promocionais recorrentes, pontos por compras e divulgação com indicação.
 
-> **Status:** MVP implementado (specs 001 a 007); versão online pendente. Entrega em 14/11/2026 até 12h.
+> **Status:** MVP implementado (specs 001 a 009); versão online pendente. Entrega em 14/11/2026 até 12h.
 
 ## Sumário
 
@@ -97,6 +97,7 @@ Usuários de exemplo, sem senha. Entre por Perfil › "Entrar ou criar conta" (n
 | J6 · Indicação | Bruno: Indicar mostra o `BRUNO100`. Crie a conta com ele (J1, vira a Ana). A Ana gera o código de compra e o lojista confirma (J4): os dois ganham 100 pontos, uma única vez |
 | J7 · Oferta relâmpago | Lojista: "Criar oferta relâmpago" › produto, desconto, duração (1 e 3 min só para a demonstração) e quantidade › "Publicar oferta". O visitante a vê com contagem; ela encerra ao esgotar ou expirar. O lojista só encerra as próprias ofertas relâmpago, não as da campanha |
 | J8 · Lote liberado | Shopping: `/mall` › "Liberar lote agora" na placa de vídeo. O visitante vê o lote liberado, com a contagem de estoque ao vivo |
+| J9 · Votação | Visitante: atalho "Votar" › escolher uma opção › "Confirmar voto" › resultado em porcentagem. Shopping: `/mall` › cartão "Votação da programação" › "Encerrar votação" › o visitante vê a opção vencedora |
 
 Detalhes das jornadas e telas no [design](docs/design.md#5-jornadas).
 
@@ -129,7 +130,7 @@ Em Perfil, toque 5 vezes no avatar (até 1,5 s entre toques), em qualquer perfil
     ├── design.md              # UI/UX: tema, telas e jornadas
     ├── prototype/app.html     # protótipo navegável das jornadas (referência, não código)
     ├── prototype/journeys.html # protótipo anterior das jornadas, substituído pelo app.html
-    └── specs/                 # fatias de implementação (000 modelo, 001 a 007)
+    └── specs/                 # fatias de implementação (000 modelo, 001 a 009)
 ```
 
 ## Documentação
@@ -139,7 +140,7 @@ Em Perfil, toque 5 vezes no avatar (até 1,5 s entre toques), em qualquer perfil
 | [PRD](docs/prd.md) | Problema, objetivos e não objetivos, requisitos funcionais e não funcionais priorizados em MoSCoW, decisões de produto, métricas, riscos e perguntas em aberto |
 | [SDD](docs/sdd.md) | Arquitetura, stack, módulos, modelo de dados, o que é real e o que é simulado, decisões técnicas |
 | [Design](docs/design.md) | Tema visual, navegação, telas e estados, jornadas e validação; protótipo navegável em `docs/prototype/app.html` (o anterior, `journeys.html`, foi substituído por ele) |
-| [Specs](docs/specs/000-modelo.md) | Fatias de implementação, uma por arquivo: [001 base](docs/specs/001-base-do-projeto.md), [002 campanhas](docs/specs/002-campanhas-e-ofertas.md), [003 compras e pontos](docs/specs/003-compras-e-pontos.md), [004 indicação e conta](docs/specs/004-indicacao-e-conta.md), [005 lojista](docs/specs/005-lojista.md), [006 painel do shopping](docs/specs/006-painel-do-shopping.md), [007 Easter Egg](docs/specs/007-easter-egg-sexta-13.md) |
+| [Specs](docs/specs/000-modelo.md) | Fatias de implementação, uma por arquivo: [001 base](docs/specs/001-base-do-projeto.md), [002 campanhas](docs/specs/002-campanhas-e-ofertas.md), [003 compras e pontos](docs/specs/003-compras-e-pontos.md), [004 indicação e conta](docs/specs/004-indicacao-e-conta.md), [005 lojista](docs/specs/005-lojista.md), [006 painel do shopping](docs/specs/006-painel-do-shopping.md), [007 Easter Egg](docs/specs/007-easter-egg-sexta-13.md), [009 votação](docs/specs/009-votacao-da-programacao.md) |
 | [Notion da equipe](https://cute-felidae-d88.notion.site/Proposta-de-solu-o-41778f6a5d55809f9337f0b2172416ef) | Documento da ideia entregue na primeira fase |
 
 ## Como contribuir

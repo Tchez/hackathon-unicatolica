@@ -70,6 +70,7 @@ Cada módulo é uma pasta em `src/features/`, com suas telas, componentes, estad
 | Campanhas e ofertas | `offers` | F06, F16 | Visitante: campanhas, ofertas, lotes, contagem regressiva, resgate de cupom com limite real. Lojista: criar e acompanhar oferta relâmpago |
 | Compras e pontos | `points` | F01, F02, F03, F23 | Visitante: gerar código de compra, saldo, extrato, troca por cupom de desconto ou de estacionamento, "Meus cupons". Lojista: confirmar compra com código e valor |
 | Indicação | `referral` | F27 | Código do usuário, cadastro com código e bônus para os dois lados |
+| Votação | `community` | F07 | Visitante: votar uma vez na programação e ver o resultado em porcentagem, com a vencedora depois do encerramento. Shopping: totais por opção e "Encerrar votação" no painel |
 | Administração do shopping | `mall` | F06 | Painel das campanhas, liberação de lote na hora e resultados agregados, sem dados pessoais (RNF05). Criar campanha pela tela fica fora do MVP: campanhas vêm dos dados simulados |
 
 ## 5. Modelo de dados
@@ -88,6 +89,8 @@ Interfaces em `src/types/`. Valores em centavos (inteiros); datas em texto ISO 8
 | Compra | `Purchase` | `id`, `userId`, `storeId`, `purchaseCode`, `amountCents`, `createdAt` |
 | Movimento de pontos | `PointsEntry` | `id`, `userId`, `points` (positivo ou negativo), `reason` (`purchase`, `redemption`, `referral`), `refId`, `createdAt` |
 | Indicação | `Referral` | `id`, `referrerId`, `referredId`, `status` (`pending` ou `rewarded`) |
+| Votação | `Poll` | `id`, `question`, `options` (`PollOption`: `id`, `label`), `closesAt`, `closedAt` (encerrada antes do prazo) |
+| Voto | `PollVote` | `pollId`, `userId`, `optionId`, `createdAt` |
 
 - Campos além da tabela: `Offer.originalPriceCents` e `offerPriceCents` (preços ilustrativos, opcionais) e `Coupon.expiresAt` (validade de 60 min, Q10). Oferta encerrada antes do prazo tem `endsAt` igual ao momento do encerramento.
 - `Campaign` não tem campo de fim: o fim da campanha é o maior `endsAt` entre as suas ofertas.
