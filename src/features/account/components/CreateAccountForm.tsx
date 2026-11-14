@@ -1,6 +1,6 @@
 import { useId, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
-import { showRouteNotice } from '../../../app/RouteNotice'
+import { showRouteNotice } from '../../../app/noticeQueue'
 import { SimulatedBadge } from '../../../components/SimulatedBadge'
 import { getUser } from '../accountStore'
 import {

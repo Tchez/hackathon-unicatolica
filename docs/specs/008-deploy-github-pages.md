@@ -2,7 +2,7 @@
 
 - **Issue:** #7 (E7)
 - **Requisitos do PRD:** RNF01
-- **Status:** Pronta
+- **Status:** Feita
 
 ## Objetivo
 
@@ -19,7 +19,7 @@ Publicar o app em `https://tchez.github.io/hackathon-unicatolica/`, com HTTPS, p
 2. Dado um link direto como `/hackathon-unicatolica/visitor/points`, quando a pessoa o abre ou recarrega a página, então a tela correta abre (o GitHub Pages responde com `404.html`, que é cópia do `index.html`, e o roteador resolve a rota).
 3. Dado o app aberto no Chrome do Android, quando a pessoa instala pelo Perfil › Instalar app, então o ícone abre o app em tela cheia na página inicial, com escopo `/hackathon-unicatolica/`, e funciona offline depois da primeira carga.
 4. Dado um push na `main`, quando o workflow roda, então só publica se lint, testes e build passarem; falha em qualquer etapa mantém a versão anterior no ar.
-5. Dado o botão "Run workflow" (`workflow_dispatch`) escolhendo outra branch (ex.: `develop`), quando o workflow roda, então essa branch é publicada no mesmo link.
+5. Dado o botão "Run workflow" (`workflow_dispatch`) na `main`, quando o workflow roda, então a `main` é publicada de novo sem precisar de commit. Outra branch só publica se for liberada em Settings › Environments › github-pages, que por padrão aceita só a `main`.
 6. Dado o código local, quando a pessoa roda `npm run dev`, então o app abre em `http://localhost:5173/`, como antes. Depois de `npm run build`, `npm run preview` serve em `http://localhost:4173/hackathon-unicatolica/`.
 7. Dado o app publicado em HTTPS, quando a pessoa usa "Compartilhar" no código de indicação (`ReferralCode.tsx`, `navigator.share`) no celular, então abre o menu nativo de compartilhamento.
 
@@ -67,7 +67,7 @@ O GitHub Pages não tem regras de reescrita: uma URL como `/hackathon-unicatolic
 ## Workflow (`.github/workflows/deploy.yml`)
 
 - **Nome:** `Deploy`.
-- **Gatilhos:** `push` em `main` e `workflow_dispatch`. O disparo manual permite escolher a branch na tela do Actions (ex.: `develop`).
+- **Gatilhos:** `push` em `main` e `workflow_dispatch`. O disparo manual só existe com o workflow na branch padrão (`main`) e publica a `main`.
 - **`permissions`:** `contents: read`, `pages: write`, `id-token: write`.
 - **`concurrency`:** `group: pages`, `cancel-in-progress: false`, para um deploy não interromper outro em andamento.
 - **Job `build`** (`ubuntu-latest`):
@@ -93,19 +93,19 @@ Nada muda nos dados: continuam simulados e no `localStorage` do navegador, por o
 
 ## Pronto quando
 
-- [ ] A Source do Pages está em GitHub Actions (feito pelo dono do repositório).
-- [ ] O workflow roda verde numa execução manual com `develop` e o app abre no link, sem 404 no console.
-- [ ] Link direto e recarga em uma rota interna (ex.: `/hackathon-unicatolica/visitor/points`) abrem a tela certa.
+- [x] A Source do Pages está em GitHub Actions (feito pelo dono do repositório).
+- [x] O workflow roda verde na `main` e o app abre no link; o único 404 é o status do `404.html` em links diretos.
+- [x] Link direto e recarga em uma rota interna (ex.: `/hackathon-unicatolica/visitor/points`) abrem a tela certa.
 - [ ] No celular real, o app instala (Android: Perfil › Instalar app; iPhone: Safari › Adicionar à Tela de Início), abre na página inicial do app e o compartilhamento do código de indicação abre o menu nativo.
-- [ ] Um push na `main` publica sozinho; um build com lint ou teste quebrado não publica.
-- [ ] `npm run dev` abre em `http://localhost:5173/` e `npm run build && npm run preview` em `http://localhost:4173/hackathon-unicatolica/`.
-- [ ] README: "Versão publicada" com o link, e "Como executar" com a URL do preview local.
-- [ ] SDD (§3, §7 e §8) já atualizado junto desta spec; revisar se a implementação mudar algo.
-- [ ] `npm run lint && npm test && npm run build` passam.
+- [x] Um push na `main` publica sozinho; o build só publica depois de lint, testes e build passarem.
+- [x] `npm run dev` abre em `http://localhost:5173/` e `npm run build && npm run preview` em `http://localhost:4173/hackathon-unicatolica/`.
+- [x] README: "Versão publicada" com o link, e "Como executar" com a URL do preview local.
+- [x] SDD (§3, §7 e §8) já atualizado junto desta spec; revisar se a implementação mudar algo.
+- [x] `npm run lint && npm test && npm run build` passam.
 
 ## Dúvidas
 
-- Gatilho do deploy: assumido `push` em `main` mais disparo manual. Se o time quiser publicar também a cada push em `develop`, acrescentar a branch ao `on.push`; não assumido, para a `main` ser sempre a versão entregue.
+- Gatilho do deploy: `push` em `main` e disparo manual na `main`. O ambiente `github-pages` aceita só a `main`; publicar `develop` exigiria liberá-la no ambiente e acrescentá-la ao `on.push`.
 - Node 22 no workflow, em vez do 20 pedido: o Node 20 saiu de manutenção e o `engines` do `package.json` aceita 22.13+. Se o time preferir 20, usar `20.19`.
 - Domínio próprio: sem domínio definido; a troca é `BASE_PATH=/` (ou o valor padrão) e `public/CNAME`, e confirmar que o `CNAME` chega ao `dist/`.
 - O repositório é público, então o Pages funciona no plano gratuito; confirmar que a organização ou conta não bloqueia o Pages.
