@@ -207,15 +207,17 @@ Integrações com aplicativos de shopping, consulta de notas e detecção de pre
 
 Cenário ilustrativo: uma campanha de 11/11 anuncia cinco TVs pela metade do preço em um lote liberado durante o dia, junto de promoções em outras lojas. A visitante chega cedo e circula enquanto aguarda. No lote, ela tenta resgatar: consegue e compra, ou encontra o esgotado e aproveita outra promoção. A compra comprovada gera pontos para a próxima visita.
 
-Critérios propostos:
+Critérios, verificados no app publicado:
 
-- [ ] Campanha recorrente: divulgação, chegada antecipada e liberação do lote, com alternativas quando o cupom esgota.
-- [ ] Prazo e quantidade reais; a oferta encerra ao expirar ou esgotar.
-- [ ] Aviso ao visitante, com presença real ou simulada e identificada.
-- [ ] Lojista cria uma oferta relâmpago com desconto, prazo e limite.
-- [ ] Registro de compra sem reutilização do comprovante.
-- [ ] Pontos pela regra definida, saldo e quanto falta para a próxima recompensa.
-- [ ] Troca de pontos por cupom ou estacionamento.
-- [ ] Código de indicação e bônus para quem indica e para o indicado.
-- [ ] Easter Egg demonstrado.
-- [ ] Roteiro em menos de três minutos, explicando os pilares, o financiamento e o que é real ou simulado.
+- [x] Campanha recorrente: divulgação, chegada antecipada e liberação do lote, com alternativas quando o cupom esgota.
+- [x] Prazo e quantidade reais; a oferta encerra ao expirar ou esgotar.
+- [x] Aviso ao visitante, com presença real ou simulada e identificada.
+- [x] Lojista cria uma oferta relâmpago com desconto, prazo e limite.
+- [x] Registro de compra sem reutilização do comprovante.
+- [x] Pontos pela regra definida, saldo e quanto falta para a próxima recompensa.
+- [x] Troca de pontos por cupom ou estacionamento.
+- [x] Código de indicação e bônus para quem indica e para o indicado.
+- [x] Easter Egg demonstrado.
+- [x] Votação da programação ([SPEC 009](specs/009-votacao-da-programacao.md)).
+- [x] Roteiro do vídeo de 90 s ([pitch](pitch/README.md)).
+- [ ] Apresentação de 5 minutos: pilares, financiamento e o que é real ou simulado.
