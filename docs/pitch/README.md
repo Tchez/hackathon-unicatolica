@@ -2,7 +2,7 @@
 
 Vídeo de apresentação pedido na entrega (item 5): problema, quem é afetado, solução, produto e como ele ajuda. Gravado por um integrante da equipe; só um apresentador aparece.
 
-- **Vídeo:** [`pitch-90s.mp4`](pitch-90s.mp4) (1:28,5; a frase "As pessoas se programam para estar no shopping no dia" aparece só na legenda).
+- **Vídeo:** [`pitch-90s.mp4`](pitch-90s.mp4) (1:28,5, com a voz da apresentadora em todas as frases).
 - **App mostrado nas telas:** https://tchez.github.io/hackathon-unicatolica/
 
 ## Roteiro
