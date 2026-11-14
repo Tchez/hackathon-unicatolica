@@ -1,6 +1,6 @@
 # SPEC 003: compras e pontos (visitante)
 
-- **Issue:** #4 (E4)
+- **Issue:** #3 (E3)
 - **Requisitos do PRD:** F01, F02, F03, F23, RNF03
 - **Status:** Feita
 
@@ -33,9 +33,9 @@ O visitante comprova a compra com um código, acompanha os pontos e os troca por
 
 ## Pronto quando
 
-- [ ] J4 (com a SPEC 005 ou disparando `confirmPurchase` pelo console) e J5 funcionam.
-- [ ] Erros de saldo, limite e código vencido aparecem.
-- [ ] `npm run lint && npm test && npm run build` passam.
+- [x] J4 (com a SPEC 005) e J5 funcionam.
+- [x] Erros de saldo, limite e código vencido aparecem.
+- [x] `npm run lint && npm test && npm run build` passam.
 
 ## Dúvidas
 

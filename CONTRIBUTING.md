@@ -67,10 +67,9 @@ Exemplo: `feat: liberar lote da campanha em horário surpresa (#21)`.
 
 - Pequeno e de uma tarefa só, com base em `develop`. O título segue o padrão de commit.
 - A descrição diz o que muda e como testar, e fecha a issue com `Closes #numero`.
-- Antes de pedir revisão: o projeto roda seguindo o README; o que é simulado aparece identificado; PRD, SDD e o "Como executar" do README estão atualizados, se o PR mexe neles.
+- Antes de pedir revisão: o projeto roda seguindo o README; `npm run lint && npm test && npm run build` passam; o que é simulado aparece identificado; PRD, SDD e o "Como executar" do README estão atualizados, se o PR mexe neles.
 - O tech lead revisa e faz o merge em `develop` com **squash**; a branch da tarefa é apagada depois.
 - A promoção `develop` → `main` usa **merge commit**, para as duas branches manterem o mesmo histórico.
-- Se o PR muda escopo, regra ou arquitetura, atualize no mesmo PR o [PRD](docs/prd.md) ou o [SDD](docs/sdd.md).
 
 ## Documentação
 
@@ -79,5 +78,6 @@ Exemplo: `feat: liberar lote da campanha em horário surpresa (#21)`.
 | [README](README.md) | Visão geral, como executar, estrutura |
 | [PRD](docs/prd.md) | Problema, requisitos priorizados em MoSCoW, decisões de produto, riscos |
 | [SDD](docs/sdd.md) | Arquitetura, stack, módulos, dados, o que é real e o que é simulado, decisões técnicas |
-| [Specs](docs/specs/000-modelo.md) | Uma fatia de implementação por arquivo, a partir do modelo 000 |
+| [Design](docs/design.md) | Tema, telas, estados e jornadas; protótipo navegável `docs/prototype/app.html` (o anterior, `docs/prototype/journeys.html`, foi substituído por ele) |
+| [Specs](docs/specs/000-modelo.md) | Uma fatia de implementação por arquivo: modelo 000 e specs 001 a 007 em `docs/specs/` |
 | [AGENTS.md](AGENTS.md) | Regras para assistentes de IA |
