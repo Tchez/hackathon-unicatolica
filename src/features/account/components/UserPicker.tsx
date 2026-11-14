@@ -1,15 +1,17 @@
 import { useNavigate } from 'react-router'
-import { HOME_BY_ROLE, ROLE_LABELS } from '../../../app/roles'
+import { ROLE_LABELS } from '../../../app/roles'
 import type { Role } from '../../../types'
 import { useAccountStore } from '../accountStore'
+import { useReturnPath } from './useReturnPath'
 
 const ROLE_ORDER: Role[] = ['visitor', 'merchant', 'mall']
 
-/** Usuários de exemplo agrupados por perfil, sem senha: escolher um entra na tela inicial do perfil dele. */
+/** Usuários de exemplo agrupados por perfil, sem senha: escolher um entra no perfil e volta à tela de origem, se houver. */
 export function UserPicker() {
   const users = useAccountStore((state) => state.users)
   const login = useAccountStore((state) => state.login)
   const navigate = useNavigate()
+  const returnPath = useReturnPath()
 
   return (
     <div className="flex flex-col gap-5">
@@ -25,7 +27,7 @@ export function UserPicker() {
                   <button
                     type="button"
                     onClick={() => {
-                      if (login(user.id)) navigate(HOME_BY_ROLE[user.role])
+                      if (login(user.id)) navigate(returnPath(user.role), { replace: true })
                     }}
                     className="flex min-h-12 w-full items-center rounded-card bg-surface px-4 py-2 text-left font-medium hover:bg-primary-soft"
                   >

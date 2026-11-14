@@ -2,7 +2,7 @@
 
 - **Issue:** #4 (E4)
 - **Requisitos do PRD:** F06, F16 (lado do visitante), RNF03, RNF04, RNF06
-- **Status:** Pronta (depende da SPEC 001 na `develop`)
+- **Status:** Feita
 
 ## Objetivo
 

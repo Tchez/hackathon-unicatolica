@@ -2,7 +2,7 @@
 
 - **Issue:** #4 (E4)
 - **Requisitos do PRD:** F01, F02, F03, F23, RNF03
-- **Status:** Pronta (depende da SPEC 001 na `develop`)
+- **Status:** Feita
 
 ## Objetivo
 

@@ -1,14 +1,15 @@
 import { useId, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
-import { HOME_BY_ROLE } from '../../../app/roles'
 import { SimulatedBadge } from '../../../components/SimulatedBadge'
 import { createDemoAccount, enterDemoAccount, type CreateAccountResult } from './createAccount'
+import { useReturnPath } from './useReturnPath'
 
 /** Bloco "Criar conta": só o código de indicação, opcional (coleta mínima, RNF05). */
 export function CreateAccountForm() {
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const returnPath = useReturnPath()
   const inputId = useId()
   const hintId = useId()
   const errorId = useId()
@@ -16,7 +17,7 @@ export function CreateAccountForm() {
   const finish = (result: CreateAccountResult) => {
     if (result.ok) {
       // A conta criada é sempre a da Ana, uma visitante (P8 do design).
-      navigate(HOME_BY_ROLE.visitor)
+      navigate(returnPath('visitor'), { replace: true })
       return
     }
     setError(result.message)

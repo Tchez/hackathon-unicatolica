@@ -2,7 +2,7 @@
 
 - **Issue:** #4 (E4)
 - **Requisitos do PRD:** F04, RNF01, RNF03
-- **Status:** Pronta
+- **Status:** Feita
 
 ## Objetivo
 

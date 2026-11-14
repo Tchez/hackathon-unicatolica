@@ -30,11 +30,13 @@ export function LotReleasedNotice() {
   return (
     <div role="status" className="flex items-center gap-2 bg-green px-4 py-1 text-white">
       <Zap aria-hidden className="size-5 flex-none" />
-      <p className="min-w-0 flex-1 text-sm">
-        <span className="font-semibold">Lote liberado agora</span>
-        <span className="block truncate text-[13px] opacity-90">{offerHeadline(lot.offer)}</span>
-      </p>
-      <SimulatedBadge />
+      <div className="min-w-0 flex-1 text-sm">
+        <p className="font-semibold whitespace-nowrap">Lote liberado agora</p>
+        <p className="flex items-center gap-2 text-[13px]">
+          <span className="min-w-0 truncate opacity-90">{offerHeadline(lot.offer)}</span>
+          <SimulatedBadge />
+        </p>
+      </div>
       <Link
         to={`/visitor/offers/${lot.offer.id}`}
         className="flex min-h-11 flex-none items-center px-2 text-sm font-semibold underline"

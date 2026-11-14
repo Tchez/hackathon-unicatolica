@@ -2,7 +2,7 @@
 
 - **Issue:** #4 (E4)
 - **Requisitos do PRD:** F16, F01 (lado da loja), RNF04
-- **Status:** Pronta (depende da SPEC 001 na `develop`)
+- **Status:** Feita
 
 ## Objetivo
 

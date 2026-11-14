@@ -2,7 +2,7 @@
 
 - **Issue:** #4 (E4)
 - **Requisitos do PRD:** F06 (lado do shopping), RNF05
-- **Status:** Pronta (depende da SPEC 001 na `develop`)
+- **Status:** Feita
 
 ## Objetivo
 
