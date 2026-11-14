@@ -70,7 +70,7 @@ function OfferDetail({ offer }: OfferDetailProps) {
   const status = getOfferStatus(offer, now)
   const store = stores.find((item) => item.id === offer.storeId)
   const campaign = campaigns.find((item) => item.id === offer.campaignId)
-  const { icon: Icon } = getStoreVisual(store)
+  const { icon: Icon, tone } = getStoreVisual(store)
   const claimed = user
     ? coupons.some(
         (coupon) => coupon.userId === user.id && coupon.source === 'offer' && coupon.sourceId === offer.id,
@@ -106,7 +106,7 @@ function OfferDetail({ offer }: OfferDetailProps) {
       >
         ← Campanhas e ofertas
       </Link>
-      <div className="flex h-44 items-center justify-center rounded-card bg-linear-to-br from-text via-muted to-text text-white/80">
+      <div className={`flex h-44 items-center justify-center rounded-card ${tone}`}>
         <Icon aria-hidden className="size-16" />
       </div>
       <h1 className="mt-3.5 text-xl font-semibold">{offerHeadline(offer)}</h1>
@@ -114,6 +114,7 @@ function OfferDetail({ offer }: OfferDetailProps) {
         {store?.name}
         {campaign ? ` · ${campaign.name}` : ' · Oferta relâmpago'}
       </p>
+      {store?.slogan && <p className="text-sm text-muted">{store.slogan}</p>}
 
       {offer.originalPriceCents !== undefined && offer.offerPriceCents !== undefined && (
         <div className="mt-2">
@@ -145,10 +146,10 @@ function OfferDetail({ offer }: OfferDetailProps) {
 
       {status === 'live' && (
         <>
-          <div className="mt-3.5 flex min-h-12 items-center gap-2.5 border-b border-line py-3">
+          <div className="mt-3.5 flex min-h-12 flex-wrap items-center gap-x-2.5 gap-y-1.5 border-b border-line py-3">
             <Zap aria-hidden className="size-5 flex-none text-green" />
-            <b className="font-semibold text-green">Lote liberado agora</b>
-            <span className="ml-auto rounded-md bg-primary-soft px-2.5 py-0.5 text-sm font-semibold text-primary">
+            <b className="font-semibold whitespace-nowrap text-green">Lote liberado agora</b>
+            <span className="ml-auto rounded-md whitespace-nowrap bg-primary-soft px-2.5 py-0.5 text-sm font-semibold text-primary">
               Termina em <Countdown endsAt={offer.endsAt} />
             </span>
           </div>
@@ -175,7 +176,7 @@ function OfferDetail({ offer }: OfferDetailProps) {
               </p>
             </>
           )}
-          <PresenceControl />
+          {user && <PresenceControl />}
         </>
       )}
 

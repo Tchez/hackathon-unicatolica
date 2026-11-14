@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { useAccountStore } from '../accountStore'
+import { useAccountStore } from './accountStore'
 import { useMarketingConsentStore } from './marketingConsentStore'
 
 const consent = () => useMarketingConsentStore.getState()

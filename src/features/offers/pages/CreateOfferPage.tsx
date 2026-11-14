@@ -42,7 +42,7 @@ export function CreateOfferPage() {
   const publish = (event: SyntheticEvent) => {
     event.preventDefault()
     if (!user?.storeId || !store) {
-      setError('Sua conta de lojista não tem uma loja vinculada. Entre novamente pelo perfil.')
+      setError('Sua conta de lojista não tem uma loja vinculada. Entre novamente.')
       return
     }
     const titleError = validateTitle(title)

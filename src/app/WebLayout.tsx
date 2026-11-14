@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { MallLogo } from '../components/MallLogo'
 import { PrototypeNotice } from '../components/PrototypeNotice'
 import { useCurrentUser } from '../features/account/accountStore'
+import { RouteNotice } from './RouteNotice'
 import { LotReleasedNotice } from '../features/offers/components/LotReleasedNotice'
 import { useScrolled } from '../features/offers/components/useScrolled'
 import type { Role } from '../types'
@@ -82,7 +83,7 @@ export function WebLayout() {
             ))}
           </nav>
           <Link
-            to="/profile"
+            to={user ? '/profile' : '/login'}
             className={`flex min-h-11 items-center gap-2 rounded-card px-3 py-2 text-sm ${transparent ? 'bg-white/20' : 'bg-surface'}`}
           >
             <UserIcon aria-hidden className="size-4" />
@@ -98,6 +99,7 @@ export function WebLayout() {
       {/* Na tela inicial, o carrossel ocupa a largura toda; a própria tela centraliza o resto. */}
       <main className={`w-full flex-1 ${hasCarousel ? '' : 'mx-auto max-w-5xl'}`}>
         <Outlet />
+        <RouteNotice />
       </main>
     </div>
   )

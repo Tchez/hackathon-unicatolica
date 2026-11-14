@@ -40,7 +40,7 @@ interface AppGridProps {
   onUnavailable: () => void
 }
 
-/** Grade original do app do shopping; itens fora do MVP mostram o aviso "Fora do protótipo". */
+/** Grade original do app do shopping; itens fora do MVP mostram o aviso "Não disponível no protótipo". */
 export function AppGrid({ onUnavailable }: AppGridProps) {
   return (
     <div className="grid grid-cols-4 gap-x-2 gap-y-3 sm:grid-cols-5 lg:grid-cols-9">

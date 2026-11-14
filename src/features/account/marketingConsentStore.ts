@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { localJSONStorage, storageKey } from '../../../lib/storage'
-import { registerStore } from '../../../lib/storeRegistry'
+import { localJSONStorage, storageKey } from '../../lib/storage'
+import { registerStore } from '../../lib/storeRegistry'
 
 interface MarketingConsentState {
   /** Consentimento de marketing por id de usuário. Quem não aparece aqui não consentiu (RNF05). */

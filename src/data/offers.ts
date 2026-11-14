@@ -12,7 +12,8 @@ export function createCampaigns(now: number): Campaign[] {
     {
       id: CAMPAIGN_1111_ID,
       name: '11/11 no Capim',
-      date: new Date(now).toISOString(),
+      // 11 de novembro do ano corrente, no horário local: o nome da campanha é a data.
+      date: new Date(new Date(now).getFullYear(), 10, 11).toISOString(),
       storeIds: ['store-techplay', 'store-livraria-folha', 'store-moda-sol'],
       description: 'Ofertas de grande desconto em quantidade limitada, liberadas em lotes durante o dia.',
     },

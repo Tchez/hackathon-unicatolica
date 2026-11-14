@@ -1,4 +1,5 @@
 import { ChevronRight } from 'lucide-react'
+import { remainingLabel } from './merchant/labels'
 import { Link } from 'react-router'
 import { getOfferStatus, getRemaining, useOffersStore } from '../offersStore'
 import type { Offer } from '../../../types'
@@ -36,7 +37,7 @@ export function OfferCard({ offer }: OfferCardProps) {
           <StatusChip status={status} />
           {status === 'live' && (
             <>
-              <span className={CHIP}>{getRemaining(offer, now)} restantes</span>
+              <span className={CHIP}>{remainingLabel(getRemaining(offer, now))}</span>
               <span className="inline-flex rounded-md bg-primary-soft px-2 py-0.5 text-xs font-semibold text-primary">
                 Termina em <Countdown endsAt={offer.endsAt} className="ml-1" />
               </span>

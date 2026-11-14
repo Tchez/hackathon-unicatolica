@@ -21,6 +21,75 @@
   --font-sans: 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
 
   --radius-card: 8px;
+
+  /* Easter Egg de sexta-feira 13: só entram em ação com `motion-safe:`. */
+  --animate-cat-walk: cat-walk 4s linear forwards;
+  --animate-lightning: lightning 0.5s ease-out forwards;
+  --animate-fade-out: fade-out 0.6s ease-out forwards;
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-shake: shake 0.5s ease-in-out;
+  --animate-bob: bob 2.4s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 2.4s ease-in-out infinite;
+
+  --shadow-glow: 0 0 24px color-mix(in srgb, var(--color-primary) 55%, transparent);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20%,
+    60% {
+      transform: translateX(-6px);
+    }
+    40%,
+    80% {
+      transform: translateX(6px);
+    }
+  }
+  @keyframes bob {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  @keyframes pulse-slow {
+    50% {
+      transform: scale(1.03);
+    }
+  }
+
+  @keyframes cat-walk {
+    from {
+      left: -4rem;
+    }
+    to {
+      left: 100%;
+    }
+  }
+  @keyframes lightning {
+    0% {
+      opacity: 0.9;
+    }
+    20% {
+      opacity: 0;
+    }
+    35% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
 }
 
 @layer base {

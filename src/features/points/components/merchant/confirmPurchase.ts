@@ -1,8 +1,9 @@
-import { PURCHASE_CODE_LENGTH } from '../../../../config/business-rules'
+import { MAX_PURCHASE_AMOUNT_CENTS, PURCHASE_CODE_LENGTH } from '../../../../config/business-rules'
 import { formatCurrency } from '../../../../lib/format'
 import { normalizeCode } from '../../../../lib/purchaseCode'
 import type { Result } from '../../../../types'
 import { getUser } from '../../../account/accountStore'
+import { formatPoints } from '../../../offers/components/offerView'
 import type { ConfirmPurchaseError, PurchaseConfirmation } from '../../pointsStore'
 
 /** Resultado para a tela: sucesso (verde) ou erro, com o texto principal e um detalhe opcional. */
@@ -81,6 +82,13 @@ export function checkPurchaseForm(codeInput: string, amountInput: string): Purch
   if (amountCents <= 0) {
     return { ok: false, field: 'amount', message: ERROR_MESSAGES.invalid_amount }
   }
+  if (amountCents > MAX_PURCHASE_AMOUNT_CENTS) {
+    return {
+      ok: false,
+      field: 'amount',
+      message: `Na demonstração, o valor máximo por compra é ${formatCurrency(MAX_PURCHASE_AMOUNT_CENTS)}`,
+    }
+  }
   return { ok: true, code, amountCents }
 }
 
@@ -91,13 +99,18 @@ export function describeConfirmation(
 ): ConfirmOutcome {
   if (!result.ok) return { ok: false, title: ERROR_MESSAGES[result.error] }
 
-  const { purchase, pointsEarned } = result.value
+  const { purchase, pointsEarned, referralEntries } = result.value
   const customer = lookupName(purchase.userId)
-  const points = `${pointsEarned} ${pointsEarned === 1 ? 'ponto' : 'pontos'}`
+  const points = `${formatPoints(pointsEarned)} ${pointsEarned === 1 ? 'ponto' : 'pontos'}`
   const amount = `Valor: ${formatCurrency(purchase.amountCents)}`
+  const bonus = referralEntries
+    .filter((entry) => entry.userId === purchase.userId)
+    .reduce((sum, entry) => sum + entry.points, 0)
+  const parts = [customer ? `Cliente: ${firstName(customer)}` : undefined, amount]
+  if (bonus > 0) parts.push(`+${formatPoints(bonus)} pontos de bônus de indicação`)
   return {
     ok: true,
     title: `Compra confirmada · +${points} para o cliente`,
-    detail: customer ? `Cliente: ${firstName(customer)} · ${amount}` : amount,
+    detail: parts.filter(Boolean).join(' · '),
   }
 }

@@ -93,6 +93,9 @@ export function PurchaseCodeScreen({ userId }: PurchaseCodeScreenProps) {
                     +{formatPoints(summary.bonusPoints)} pontos de bônus de indicação
                   </p>
                 )}
+                <div className="mt-2">
+                  <SimulatedBadge variant="illustrative" />
+                </div>
               </>
             )}
             <p className="mt-3 text-sm text-muted">

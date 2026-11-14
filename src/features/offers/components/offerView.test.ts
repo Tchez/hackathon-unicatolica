@@ -12,7 +12,6 @@ import {
   findAlternatives,
   findReleasedLot,
   getReleasedQuantity,
-  nextRewardTarget,
   offerHeadline,
   pickFlashOffer,
   sortByStatus,
@@ -117,17 +116,6 @@ describe('findAlternatives', () => {
     const offers = seed()
     const alternatives = findAlternatives(byId(offers, 'offer-livro'), offers, NOW)
     expect(alternatives.map((offer) => offer.id)).not.toContain(GPU_OFFER_ID)
-  })
-})
-
-describe('nextRewardTarget', () => {
-  it('aponta a primeira recompensa que o saldo não paga', () => {
-    expect(nextRewardTarget(420)?.title).toBe('R$ 10 de desconto')
-    expect(nextRewardTarget(500)?.title).toBe('R$ 25 de desconto')
-  })
-
-  it('não aponta nada quando o saldo paga todas', () => {
-    expect(nextRewardTarget(1200)).toBeUndefined()
   })
 })
 

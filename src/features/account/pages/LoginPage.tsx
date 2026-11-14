@@ -20,7 +20,7 @@ export function LoginPage() {
           <UserPicker />
         </section>
 
-        <section aria-label="Criar conta">
+        <section id="criar-conta" aria-label="Criar conta" className="scroll-mt-20">
           <CreateAccountForm />
         </section>
       </div>

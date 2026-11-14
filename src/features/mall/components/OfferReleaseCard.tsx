@@ -132,7 +132,7 @@ export function OfferReleaseCard({ offer, storeName, now, onReleased }: OfferRel
         }}
         disabled={ended}
         aria-expanded={open}
-        className="min-h-12 rounded-card bg-primary px-4 font-medium text-white disabled:opacity-50"
+        className="mt-auto min-h-12 rounded-card bg-primary px-4 font-medium text-white disabled:opacity-50"
       >
         {ended ? 'Oferta encerrada' : 'Liberar lote agora'}
       </button>

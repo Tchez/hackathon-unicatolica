@@ -1,8 +1,17 @@
 import { useId, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
+import { showRouteNotice } from '../../../app/RouteNotice'
 import { SimulatedBadge } from '../../../components/SimulatedBadge'
-import { createDemoAccount, enterDemoAccount, type CreateAccountResult } from './createAccount'
+import { getUser } from '../accountStore'
+import {
+  createDemoAccount,
+  DEMO_NEW_USER_ID,
+  enterDemoAccount,
+  type CreateAccountResult,
+} from './createAccount'
 import { useReturnPath } from './useReturnPath'
+
+export const CODE_INPUT_ID = 'create-account-code'
 
 /** Bloco "Criar conta": só o código de indicação, opcional (coleta mínima, RNF05). */
 export function CreateAccountForm() {
@@ -10,13 +19,15 @@ export function CreateAccountForm() {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const returnPath = useReturnPath()
-  const inputId = useId()
+  const inputId = CODE_INPUT_ID
   const hintId = useId()
   const errorId = useId()
 
   const finish = (result: CreateAccountResult) => {
     if (result.ok) {
       // A conta criada é sempre a da Ana, uma visitante (P8 do design).
+      const name = getUser(DEMO_NEW_USER_ID)?.name.split(' ')[0]
+      showRouteNotice(name ? `Conta criada. Olá, ${name}!` : 'Conta criada.')
       navigate(returnPath('visitor'), { replace: true })
       return
     }

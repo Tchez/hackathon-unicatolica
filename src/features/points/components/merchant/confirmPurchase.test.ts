@@ -12,8 +12,28 @@ import {
 
 const points = () => usePointsStore.getState()
 
+function newCode(): string {
+  const generated = points().generatePurchaseCode('user-ana')
+  if (!generated.ok) throw new Error('código não gerado')
+  return generated.value.code
+}
+
 beforeEach(() => {
   useAccountStore.getState().restoreDemoData()
+})
+
+describe('limite de valor e pontos em pt-BR', () => {
+  it('aceita R$ 10.000,00 e recusa acima disso', () => {
+    expect(checkPurchaseForm('123 456', '10.000,00')).toMatchObject({ ok: true, amountCents: 1_000_000 })
+    expect(checkPurchaseForm('123 456', '10.000,01')).toMatchObject({ ok: false, field: 'amount' })
+  })
+
+  it('separa milhares nos pontos da mensagem de sucesso', () => {
+    const result = points().confirmPurchase('store-techplay', newCode(), 800_000)
+    expect(describeConfirmation(result).title).toBe('Compra confirmada · +800 pontos para o cliente')
+    const big = points().confirmPurchase('store-techplay', newCode(), 1_000_000)
+    expect(describeConfirmation(big).title).toContain('+1.000 pontos')
+  })
 })
 
 describe('parseAmountToCents', () => {

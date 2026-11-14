@@ -1,4 +1,5 @@
 import { Zap } from 'lucide-react'
+import { offerHeadline } from '../offerView'
 import { OfferStateChip } from './OfferStateChip'
 import { remainingLabel } from './labels'
 import { shortDuration } from './flashOffer'
@@ -27,7 +28,7 @@ export function OfferPreviewCard({
       </span>
       <div className="min-w-0 flex-1">
         <p className={`font-semibold break-words ${product ? '' : 'text-muted'}`}>
-          {product || 'Produto'} · {discountPercent}% OFF
+          {offerHeadline({ title: product || 'Produto', discountPercent })}
         </p>
         <p className="text-sm text-muted">{storeName}</p>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">

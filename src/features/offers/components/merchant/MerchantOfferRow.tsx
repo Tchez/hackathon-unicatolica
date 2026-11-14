@@ -4,6 +4,7 @@ import { formatCountdown } from '../../../../lib/format'
 import { getRemaining } from '../../../../lib/offers'
 import type { OfferStatus } from '../../../../lib/offers'
 import type { Offer } from '../../../../types'
+import { offerHeadline } from '../offerView'
 import { OfferStateChip } from './OfferStateChip'
 import { redeemedLabel, remainingLabel } from './labels'
 
@@ -27,9 +28,7 @@ export function MerchantOfferRow({ offer, status, now }: MerchantOfferRowProps) 
         <Zap aria-hidden className="size-5" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block font-semibold break-words">
-          {offer.title} · {offer.discountPercent}% OFF
-        </span>
+        <span className="block font-semibold break-words">{offerHeadline(offer)}</span>
         <span className="mt-1 flex flex-wrap items-center gap-1.5">
           <OfferStateChip status={status} />
           {status === 'upcoming' ? (

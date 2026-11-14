@@ -1,6 +1,5 @@
-import { REWARDS } from '../../../config/business-rules'
 import { getOfferStatus, type OfferStatus } from '../../../lib/offers'
-import type { Offer, Reward } from '../../../types'
+import type { Offer } from '../../../types'
 
 // P2 do design: o lote liberado dura 5 min. Enquanto isso, quem marcou presença vê o aviso no topo.
 export const LOT_NOTICE_WINDOW_MS = 5 * 60_000
@@ -15,7 +14,7 @@ export const STATUS_LABELS: Record<OfferStatus, string> = {
 const STATUS_ORDER: Record<OfferStatus, number> = { live: 0, upcoming: 1, sold_out: 2, ended: 3 }
 
 /** Título com o desconto: acrescenta "· 30% OFF" só quando o título ainda não o cita. */
-export function offerHeadline(offer: Offer): string {
+export function offerHeadline(offer: Pick<Offer, 'title' | 'discountPercent'>): string {
   return offer.title.includes(`${offer.discountPercent}%`)
     ? offer.title
     : `${offer.title} · ${offer.discountPercent}% OFF`
@@ -55,13 +54,6 @@ export function findAlternatives(offer: Offer, offers: Offer[], now: number): Of
       (offer.campaignId === undefined || other.campaignId === offer.campaignId) &&
       getOfferStatus(other, now) === 'live',
   )
-}
-
-/** Primeira recompensa que o saldo ainda não paga; sem ela, o saldo já cobre todas. */
-export function nextRewardTarget(balance: number, rewards: Reward[] = REWARDS): Reward | undefined {
-  return [...rewards]
-    .sort((a, b) => a.pointsCost - b.pointsCost)
-    .find((reward) => reward.pointsCost > balance)
 }
 
 /** Última liberação de lote até `now` (0 se nenhum lote foi liberado). */

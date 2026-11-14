@@ -1,6 +1,6 @@
 import { Clock } from 'lucide-react'
-import { useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { formatCountdown, formatDate } from '../../../lib/format'
 import { getOfferStatus, getRemaining } from '../../../lib/offers'
 import { useCurrentUser } from '../../account/accountStore'
@@ -13,6 +13,7 @@ import {
 } from '../components/merchant/formStyles'
 import { redeemedLabel } from '../components/merchant/labels'
 import { useNow } from '../components/merchant/useNow'
+import { offerHeadline } from '../components/offerView'
 import { useOffersStore } from '../offersStore'
 
 interface Notice {
@@ -30,6 +31,7 @@ export function MerchantOfferPage() {
   const { offerId } = useParams()
   const user = useCurrentUser()
   const location = useLocation()
+  const navigate = useNavigate()
   const stores = useOffersStore((state) => state.stores)
   const campaigns = useOffersStore((state) => state.campaigns)
   const offers = useOffersStore((state) => state.offers)
@@ -42,6 +44,11 @@ export function MerchantOfferPage() {
       ? { tone: 'success', text: 'Oferta publicada. Os visitantes já podem resgatar.' }
       : undefined,
   )
+
+  // Troca a entrada do histórico por uma sem state: recarregar não repete o aviso de publicação.
+  useEffect(() => {
+    if (wasJustPublished(location.state)) navigate(location.pathname, { replace: true, state: null })
+  }, [location.pathname, location.state, navigate])
 
   // O lojista só acompanha as ofertas da própria loja.
   const offer = offers.find((item) => item.id === offerId && item.storeId === user?.storeId)
@@ -63,7 +70,8 @@ export function MerchantOfferPage() {
   const redeemedPercent = released > 0 ? Math.round((offer.redeemedCount / released) * 100) : 0
   const storeName = stores.find((item) => item.id === offer.storeId)?.name
   const campaignName = campaigns.find((item) => item.id === offer.campaignId)?.name
-  const canClose = status === 'live' || status === 'upcoming'
+  const isCampaignOffer = offer.campaignId !== undefined
+  const canClose = !isCampaignOffer && (status === 'live' || status === 'upcoming')
 
   const close = () => {
     const result = closeOffer(offer.id)
@@ -78,9 +86,7 @@ export function MerchantOfferPage() {
   return (
     <section className="mx-auto w-full max-w-xl px-4 py-6 lg:px-6">
       <p className="text-sm text-muted">Acompanhar oferta</p>
-      <h1 className="text-2xl font-semibold break-words">
-        {offer.title} · {offer.discountPercent}% OFF
-      </h1>
+      <h1 className="text-2xl font-semibold break-words">{offerHeadline(offer)}</h1>
       <p className="mt-1 text-sm text-muted">
         {storeName} · {campaignName ?? 'Oferta relâmpago'}
       </p>
@@ -157,7 +163,11 @@ export function MerchantOfferPage() {
         </div>
       )}
 
-      <p className="mt-4 text-sm text-muted">A oferta encerra sozinha ao expirar ou esgotar.</p>
+      <p className="mt-4 text-sm text-muted">
+        {isCampaignOffer
+          ? 'Oferta da campanha: os lotes são liberados pelo shopping.'
+          : 'A oferta encerra sozinha ao expirar ou esgotar.'}
+      </p>
 
       <div className="mt-4 flex flex-col gap-3">
         {confirming && canClose ? (
@@ -173,14 +183,16 @@ export function MerchantOfferPage() {
             </button>
           </div>
         ) : (
-          <button
-            type="button"
-            disabled={!canClose}
-            onClick={() => setConfirming(true)}
-            className={outlineButtonClass}
-          >
-            Encerrar agora
-          </button>
+          !isCampaignOffer && (
+            <button
+              type="button"
+              disabled={!canClose}
+              onClick={() => setConfirming(true)}
+              className={outlineButtonClass}
+            >
+              Encerrar agora
+            </button>
+          )
         )}
         <Link to="/merchant/confirm-purchase" className={secondaryButtonClass}>
           Confirmar compra

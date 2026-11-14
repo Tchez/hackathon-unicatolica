@@ -1,6 +1,6 @@
 import { useId } from 'react'
 import { SimulatedBadge } from '../../../components/SimulatedBadge'
-import { useMarketingConsent, useMarketingConsentStore } from './marketingConsentStore'
+import { useMarketingConsent, useMarketingConsentStore } from '../marketingConsentStore'
 
 interface MarketingConsentProps {
   userId: string

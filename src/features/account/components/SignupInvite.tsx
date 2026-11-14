@@ -1,4 +1,12 @@
 import { UserPlus } from 'lucide-react'
+import { CODE_INPUT_ID } from './CreateAccountForm'
+
+/** Leva ao formulário de criar conta e foca o campo, sem depender de rolagem manual. */
+function goToCreateAccount(): void {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  document.getElementById('criar-conta')?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' })
+  document.getElementById(CODE_INPUT_ID)?.focus({ preventScroll: true })
+}
 
 /** Convite para quem tentou uma ação que exige conta (J1). Título da tela de entrada. */
 export function SignupInvite() {
@@ -14,6 +22,13 @@ export function SignupInvite() {
         <p className="mt-1 text-sm text-muted">
           Pedimos só o essencial. Você continua vendo campanhas e ofertas sem conta.
         </p>
+        <button
+          type="button"
+          onClick={goToCreateAccount}
+          className="mt-3 flex min-h-12 items-center justify-center rounded-card bg-primary px-6 font-semibold text-white"
+        >
+          Criar conta
+        </button>
       </div>
     </div>
   )

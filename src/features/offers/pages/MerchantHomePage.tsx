@@ -1,4 +1,5 @@
 import { CirclePlus, Receipt } from 'lucide-react'
+import { Link } from 'react-router'
 import { useCurrentUser } from '../../account/accountStore'
 import { InlineMessage } from '../components/merchant/InlineMessage'
 import { MerchantActionCard } from '../components/merchant/MerchantActionCard'
@@ -19,7 +20,10 @@ export function MerchantHomePage() {
     return (
       <section className="mx-auto w-full max-w-3xl px-4 py-6 lg:px-6">
         <InlineMessage tone="error">
-          Sua conta de lojista não tem uma loja vinculada. Entre novamente pelo perfil.
+          Sua conta de lojista não tem uma loja vinculada. Entre novamente.{' '}
+          <Link to="/login" className="font-semibold underline">
+            Ir para o login
+          </Link>
         </InlineMessage>
       </section>
     )
@@ -31,6 +35,7 @@ export function MerchantHomePage() {
     <section className="mx-auto w-full max-w-3xl px-4 py-6 lg:px-6">
       <p className="text-sm text-muted">Área do lojista · {store.category}</p>
       <h1 className="text-2xl font-semibold">{store.name}</h1>
+      {store.slogan && <p className="text-sm text-muted">{store.slogan}</p>}
 
       <div className="mt-5 grid gap-3 lg:grid-cols-2">
         <MerchantActionCard

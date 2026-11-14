@@ -11,7 +11,7 @@ interface FloatingNoticeProps {
   onDone: () => void
 }
 
-/** Aviso passageiro no pé da tela (ex.: "Fora do protótipo"); some sozinho depois de 3 s. */
+/** Aviso passageiro no pé da tela (ex.: "Não disponível no protótipo"); some sozinho depois de 3 s. */
 export function FloatingNotice({ notice, onDone }: FloatingNoticeProps) {
   useEffect(() => {
     if (!notice) return
@@ -23,7 +23,7 @@ export function FloatingNotice({ notice, onDone }: FloatingNoticeProps) {
     <div
       role="status"
       aria-live="polite"
-      className="pointer-events-none fixed inset-x-4 bottom-6 z-30 flex justify-center"
+      className="pointer-events-none fixed inset-x-4 bottom-8 z-30 mx-auto flex max-w-md justify-center"
     >
       {notice && <p className="rounded-card bg-text px-4 py-3 text-sm text-white shadow-lg">{notice.text}</p>}
     </div>

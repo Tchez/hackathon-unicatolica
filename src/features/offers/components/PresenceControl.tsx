@@ -36,17 +36,21 @@ export function PresenceControl() {
 
   if (present) {
     return (
-      <div className="mt-4 flex min-h-12 items-center gap-2.5 rounded-card bg-surface p-3 text-sm">
-        <MapPin aria-hidden className="size-5 flex-none text-primary" />
-        <span className="flex-1">Você está no shopping. Avisaremos quando um lote for liberado.</span>
-        <SimulatedBadge />
-        <button
-          type="button"
-          onClick={() => markPresence(user.id, false)}
-          className="min-h-11 px-2 text-sm font-medium text-primary"
-        >
-          Desmarcar
-        </button>
+      <div className="mt-4 rounded-card bg-surface p-3 text-sm">
+        <p className="flex items-start gap-2.5">
+          <MapPin aria-hidden className="mt-0.5 size-5 flex-none text-primary" />
+          <span>Você está no shopping. Avisaremos quando um lote for liberado.</span>
+        </p>
+        <div className="mt-1 flex items-center justify-between gap-2 pl-7.5">
+          <SimulatedBadge />
+          <button
+            type="button"
+            onClick={() => markPresence(user.id, false)}
+            className="min-h-11 px-2 text-sm font-medium text-primary"
+          >
+            Desmarcar
+          </button>
+        </div>
       </div>
     )
   }

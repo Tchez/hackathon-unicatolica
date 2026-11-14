@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+import { createCoupon } from '../../lib/coupon'
 import { useAccountStore } from '../account/accountStore'
 import { useReferralStore } from '../referral/referralStore'
 import { usePointsStore } from './pointsStore'
@@ -81,6 +82,36 @@ describe('confirmPurchase', () => {
     points().confirmPurchase('store-techplay', newCode('user-ana'), 30_000)
     expect(points().getBalance('user-ana')).toBe(30 + 100 + 30)
     expect(points().getBalance('user-bruno')).toBe(520)
+  })
+
+  it('paga o bônus na primeira compra depois da indicação, mesmo com compra anterior', () => {
+    points().confirmPurchase('store-techplay', newCode('user-ana'), 10_000)
+    expect(points().getBalance('user-ana')).toBe(10)
+    expect(useReferralStore.getState().registerWithCode('user-ana', 'BRUNO100').ok).toBe(true)
+
+    const second = points().confirmPurchase('store-techplay', newCode('user-ana'), 10_000)
+    expect(second.ok && second.value.referralEntries).toHaveLength(2)
+    expect(points().getBalance('user-ana')).toBe(10 + 10 + 100)
+    expect(points().getBalance('user-bruno')).toBe(420 + 100)
+
+    const third = points().confirmPurchase('store-techplay', newCode('user-ana'), 10_000)
+    expect(third.ok && third.value.referralEntries).toHaveLength(0)
+    expect(points().getBalance('user-ana')).toBe(10 + 10 + 100 + 10)
+    expect(points().getBalance('user-bruno')).toBe(520)
+  })
+})
+
+describe('markCouponUsed', () => {
+  it('usa cupom ativo e recusa cupom vencido ou já usado', () => {
+    const now = Date.now()
+    const active = createCoupon('user-bruno', 'reward', 'reward-discount-10', now)
+    const expired = createCoupon('user-bruno', 'reward', 'reward-discount-10', now - 24 * 3_600_000)
+    points().addCoupon(active)
+    points().addCoupon(expired)
+    expect(points().markCouponUsed(expired.id, now)).toBe(false)
+    expect(points().coupons.find((item) => item.id === expired.id)?.status).toBe('active')
+    expect(points().markCouponUsed(active.id, now)).toBe(true)
+    expect(points().markCouponUsed(active.id, now)).toBe(false)
   })
 })
 

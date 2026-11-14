@@ -1,6 +1,9 @@
+import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { ROLE_LABELS } from '../../../app/roles'
 import { useAccountStore, useCurrentUser } from '../accountStore'
+import { Friday13Overlay } from '../components/Friday13Overlay'
+import { registerTap } from '../components/friday13'
 import { MarketingConsent } from '../components/MarketingConsent'
 import { useInstallPrompt } from '../useInstallPrompt'
 
@@ -11,12 +14,22 @@ export function ProfilePage() {
   const user = useCurrentUser()
   const logout = useAccountStore((state) => state.logout)
   const restoreDemoData = useAccountStore((state) => state.restoreDemoData)
-  const { install } = useInstallPrompt()
+  const { install, showIosHint } = useInstallPrompt()
   const navigate = useNavigate()
+  const [showFriday13, setShowFriday13] = useState(false)
+  const taps = useRef<number[]>([])
+
+  // Easter Egg: 5 toques rápidos no avatar abrem a tela de sexta-feira 13 (SPEC 007).
+  const tapAvatar = () => {
+    const result = registerTap(taps.current, Date.now())
+    taps.current = result.history
+    if (result.triggered) setShowFriday13(true)
+  }
 
   const isVisitor = user?.role === 'visitor'
   // Lojista e shopping não instalam o app por aqui; sem login, a instalação continua disponível.
-  const installApp = !user || isVisitor ? install : null
+  const canInstall = !user || isVisitor
+  const installApp = canInstall ? install : null
 
   const restore = () => {
     if (
@@ -34,12 +47,14 @@ export function ProfilePage() {
       <h1 className="text-xl font-semibold">Perfil</h1>
 
       <div className="flex items-center gap-4 rounded-card bg-surface p-4">
-        <span
-          aria-hidden
-          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-soft text-xl font-semibold text-primary"
+        <button
+          type="button"
+          aria-label="Avatar"
+          onClick={tapAvatar}
+          className="flex size-12 shrink-0 items-center justify-center cursor-default rounded-full bg-primary-soft text-xl font-semibold text-primary"
         >
           {user ? user.name.charAt(0).toUpperCase() : '?'}
-        </span>
+        </button>
         <div>
           <p className="font-semibold">{user ? user.name : 'Você não entrou'}</p>
           <p className="text-sm text-muted">{user ? ROLE_LABELS[user.role] : 'Navegando sem conta'}</p>
@@ -71,6 +86,18 @@ export function ProfilePage() {
         </button>
       )}
 
+      {canInstall && !installApp && showIosHint && (
+        <section aria-labelledby="profile-ios-install-title" className="rounded-card bg-surface p-4">
+          <h2 id="profile-ios-install-title" className="font-semibold">
+            Instalar app (opcional)
+          </h2>
+          <p className="mt-1 text-sm leading-relaxed text-muted">
+            No Safari, toque em Compartilhar e depois em Adicionar à Tela de Início. O app funciona igual sem
+            instalar.
+          </p>
+        </section>
+      )}
+
       <div className="flex flex-col gap-3">
         <button type="button" onClick={restore} className={`${buttonClass} border border-line`}>
           Restaurar dados de demonstração
@@ -80,7 +107,7 @@ export function ProfilePage() {
             type="button"
             onClick={() => {
               logout()
-              navigate('/')
+              navigate('/login')
             }}
             className={`${buttonClass} bg-primary text-white`}
           >
@@ -88,6 +115,7 @@ export function ProfilePage() {
           </button>
         )}
       </div>
+      {showFriday13 && <Friday13Overlay onClose={() => setShowFriday13(false)} />}
     </section>
   )
 }

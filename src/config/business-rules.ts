@@ -23,6 +23,9 @@ export const PURCHASE_CODE_VALIDITY_MINUTES = 10
 export const COUPON_VALIDITY_MINUTES = 60
 export const COUPON_CODE_LENGTH = 6
 
+// Valor máximo aceito na demonstração, por compra confirmada pelo lojista (em centavos)
+export const MAX_PURCHASE_AMOUNT_CENTS = 1_000_000
+
 // P7 do design: um cupom por pessoa por oferta
 export const MAX_COUPONS_PER_OFFER_PER_USER = 1
 

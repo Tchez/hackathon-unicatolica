@@ -3,8 +3,11 @@ import { useEffect } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 import { MallLogo } from '../components/MallLogo'
 import { PrototypeNotice } from '../components/PrototypeNotice'
+import { useCurrentUser } from '../features/account/accountStore'
+import { RouteNotice } from './RouteNotice'
 import { LotReleasedNotice } from '../features/offers/components/LotReleasedNotice'
 import { useScrolled } from '../features/offers/components/useScrolled'
+import { HOME_BY_ROLE } from './roles'
 
 /**
  * Layout de aplicativo (abaixo de 1024 px): topo com menu, logo e busca; seta de voltar nas telas
@@ -13,6 +16,7 @@ import { useScrolled } from '../features/offers/components/useScrolled'
  */
 export function AppLayout() {
   const navigate = useNavigate()
+  const user = useCurrentUser()
   const { pathname, hash } = useLocation()
   const scrolled = useScrolled()
   const isHome =
@@ -56,7 +60,10 @@ export function AppLayout() {
               <ArrowLeft aria-hidden />
             </button>
           )}
-          <Link to="/" className={`flex justify-center ${transparent ? '[&_span]:text-white' : ''}`}>
+          <Link
+            to={user ? HOME_BY_ROLE[user.role] : '/'}
+            className={`flex justify-center ${transparent ? '[&_span]:text-white' : ''}`}
+          >
             <MallLogo onDark={transparent} />
           </Link>
           {/* Busca fora do MVP: o botão só marca o lugar dela no topo do app. */}
@@ -77,6 +84,7 @@ export function AppLayout() {
       </header>
       <main className="flex-1">
         <Outlet />
+        <RouteNotice />
       </main>
     </div>
   )

@@ -121,8 +121,8 @@ export function HomeCarousel({ slides }: HomeCarouselProps) {
             <button
               key={slide.id}
               type="button"
-              aria-label={`Slide ${position + 1} de ${count}`}
-              aria-current={position === current}
+              aria-label={`Ir para o slide ${position + 1}`}
+              aria-current={position === current ? 'true' : undefined}
               onClick={() => setIndex(position)}
               onPointerDown={(event) => event.stopPropagation()}
               className="flex size-11 items-center justify-center"

@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import { REWARDS } from '../../config/business-rules'
 import { createCoupons, createPointsEntries, createPurchases } from '../../data/points'
 import { createStores } from '../../data/stores'
-import { createCoupon } from '../../lib/coupon'
+import { createCoupon, isCouponActive } from '../../lib/coupon'
 import { createId } from '../../lib/id'
 import { getBalance as sumBalance, pointsForAmount } from '../../lib/points'
 import {
@@ -47,8 +47,8 @@ interface PointsState {
   redeemReward: (userId: string, rewardId: string, now?: number) => Result<Coupon, RedeemRewardError>
   /** Saldo: soma dos movimentos de pontos do usuário. */
   getBalance: (userId: string) => number
-  /** Marca o cupom como usado (no caixa). Falso se não existe ou não está ativo. */
-  markCouponUsed: (couponId: string) => boolean
+  /** Marca o cupom como usado (no caixa). Falso se não existe, está vencido ou não está ativo. */
+  markCouponUsed: (couponId: string, now?: number) => boolean
   /** Uso interno do store de ofertas: guarda o cupom gerado pelo resgate de uma oferta. */
   addCoupon: (coupon: Coupon) => void
 }
@@ -103,21 +103,19 @@ export const usePointsStore = create<PointsState>()(
             createdAt,
           })
         }
-        // Primeira compra comprovada do indicado libera o bônus dos dois lados, uma única vez.
-        const isFirstPurchase = !get().purchases.some((item) => item.userId === purchase.userId)
-        const referralEntries: PointsEntry[] = isFirstPurchase
-          ? useReferralStore
-              .getState()
-              .creditFirstPurchaseBonus(purchase.userId)
-              .map((bonus) => ({
-                id: createId('entry'),
-                userId: bonus.userId,
-                points: bonus.points,
-                reason: 'referral' as const,
-                refId: bonus.referralId,
-                createdAt,
-              }))
-          : []
+        // Primeira compra comprovada depois que a indicação foi registrada libera o bônus dos dois
+        // lados; `creditFirstPurchaseBonus` só paga uma vez e ignora quem não tem indicação pendente.
+        const referralEntries: PointsEntry[] = useReferralStore
+          .getState()
+          .creditFirstPurchaseBonus(purchase.userId)
+          .map((bonus) => ({
+            id: createId('entry'),
+            userId: bonus.userId,
+            points: bonus.points,
+            reason: 'referral' as const,
+            refId: bonus.referralId,
+            createdAt,
+          }))
 
         set((state) => ({
           purchaseCodes: state.purchaseCodes.map((item) =>
@@ -153,9 +151,9 @@ export const usePointsStore = create<PointsState>()(
         return { ok: true, value: coupon }
       },
       getBalance: (userId) => sumBalance(get().entries, userId),
-      markCouponUsed: (couponId) => {
+      markCouponUsed: (couponId, now = Date.now()) => {
         const coupon = get().coupons.find((item) => item.id === couponId)
-        if (!coupon || coupon.status !== 'active') return false
+        if (!coupon || !isCouponActive(coupon, now)) return false
         set((state) => ({
           coupons: state.coupons.map((item) => (item.id === couponId ? { ...item, status: 'used' } : item)),
         }))

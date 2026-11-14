@@ -35,10 +35,12 @@ export function ConfirmPurchasePage() {
 
   const submit = (event: SyntheticEvent) => {
     event.preventDefault()
+    // Segundo toque logo após o sucesso, com os campos já limpos: mantém a confirmação na tela.
+    if (outcome?.ok && code === '' && amount === '') return
     if (!user?.storeId) {
       setOutcome({
         ok: false,
-        title: 'Sua conta de lojista não tem uma loja vinculada. Entre novamente pelo perfil',
+        title: 'Sua conta de lojista não tem uma loja vinculada. Entre novamente.',
       })
       return
     }

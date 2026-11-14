@@ -6,18 +6,20 @@ import { SimulatedBadge } from '../../../components/SimulatedBadge'
 import { CENTS_PER_POINT, REFERRAL_BONUS_POINTS } from '../../../config/business-rules'
 import { getBalance } from '../../../lib/points'
 import { useCurrentUser } from '../../account/accountStore'
+import { getProgressSummary } from '../../points/components/pointsView'
 import { usePointsStore } from '../../points/pointsStore'
 import { getOfferStatus, getRemaining, useOffersStore } from '../offersStore'
 import { AppGrid } from './AppGrid'
+import { remainingLabel } from './merchant/labels'
 import { Countdown } from './Countdown'
 import { FloatingNotice, type NoticeMessage } from './FloatingNotice'
 import { HomeCarousel, type CarouselSlide } from './HomeCarousel'
-import { campaignEndsAt, formatPoints, nextRewardTarget, offerHeadline, pickFlashOffer } from './offerView'
+import { campaignEndsAt, formatPoints, offerHeadline, pickFlashOffer } from './offerView'
 import { StoreCircles } from './StoreCircles'
 import { useNow } from './useNow'
 
 const CONTENT = 'mx-auto w-full max-w-5xl px-4 lg:px-6'
-const OUT_OF_PROTOTYPE = 'Fora do protótipo.'
+const OUT_OF_PROTOTYPE = 'Não disponível no protótipo.'
 
 /**
  * Tela inicial, igual sem login (`/`) e logado (`/visitor`): carrossel, atalhos, lojas e a grade
@@ -30,6 +32,7 @@ export function HomeScreen() {
   const campaigns = useOffersStore((state) => state.campaigns)
   const stores = useOffersStore((state) => state.stores)
   const entries = usePointsStore((state) => state.entries)
+  const coupons = usePointsStore((state) => state.coupons)
   const now = useNow()
   const [notice, setNotice] = useState<NoticeMessage | null>(null)
   const clearNotice = useCallback(() => setNotice(null), [])
@@ -75,7 +78,7 @@ export function HomeScreen() {
       tone: 'bg-linear-to-br from-green via-green to-green/70',
       eyebrow: 'Oferta relâmpago',
       title: storeName ? `${storeName} · ${offerHeadline(flash)}` : offerHeadline(flash),
-      subtitle: `${getRemaining(flash, now)} restantes`,
+      subtitle: remainingLabel(getRemaining(flash, now)),
       chip: (
         <>
           Termina em&nbsp;
@@ -97,15 +100,13 @@ export function HomeScreen() {
 
   if (visitor) {
     const balance = getBalance(entries, visitor.id)
-    const target = nextRewardTarget(balance)
+    const progress = getProgressSummary(coupons, visitor.id, balance)
     slides.push({
       id: 'points',
       tone: 'bg-linear-to-br from-gold-dark to-gold',
       eyebrow: 'Seus pontos',
       title: `${formatPoints(balance)} pontos`,
-      subtitle: target
-        ? `Faltam ${formatPoints(target.pointsCost - balance)} para ${target.title}`
-        : 'Você já pode trocar por qualquer recompensa',
+      subtitle: progress.title,
       chip: <SimulatedBadge variant="illustrative" />,
       to: '/visitor/points',
     })

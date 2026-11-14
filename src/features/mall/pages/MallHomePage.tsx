@@ -53,7 +53,7 @@ export function MallHomePage() {
           {campaignOffers.length === 0 ? (
             <p className="rounded-card bg-surface p-4 text-muted">Esta campanha ainda não tem ofertas.</p>
           ) : (
-            <div className="grid gap-4 lg:grid-cols-3 lg:items-start">
+            <div className="grid gap-4 lg:grid-cols-3">
               {campaignOffers.map((offer) => (
                 <OfferReleaseCard
                   key={offer.id}

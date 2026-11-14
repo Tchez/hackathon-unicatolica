@@ -14,9 +14,13 @@ interface RouteGuardProps {
  */
 export function RouteGuard({ allow }: RouteGuardProps) {
   const user = useCurrentUser()
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
   const returnPath = useReturnPath()
   if (!user)
-    return allow.includes('guest') ? <Outlet /> : <Navigate to="/login" replace state={{ from: pathname }} />
+    return allow.includes('guest') ? (
+      <Outlet />
+    ) : (
+      <Navigate to="/login" replace state={{ from: pathname + search }} />
+    )
   return allow.includes(user.role) ? <Outlet /> : <Navigate to={returnPath(user.role)} replace />
 }
