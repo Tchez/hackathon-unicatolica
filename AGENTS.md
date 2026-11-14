@@ -7,9 +7,9 @@
 
 ## Antes de alterar
 
-- Leia o `README.md`, o `docs/prd.md` (requisitos priorizados em MoSCoW) e, para código, o `docs/sdd.md` e a spec da tarefa em `docs/specs/`, se houver.
+- Leia o `README.md`, o `docs/prd.md` (requisitos priorizados em MoSCoW) e, para código, o `docs/sdd.md`, o `docs/design.md` e a spec da tarefa em `docs/specs/`, se houver.
 - Leia a tarefa com `gh issue view <número> -R Tchez/hackathon-unicatolica`: a issue traz o critério "Pronto quando" e o prazo. Se a pessoa indicar uma tarefa, ela vale mais que a ordem do quadro.
-- Siga o `CONTRIBUTING.md`: branch `tipo/numero-descricao` criada a partir de `dev`, Conventional Commits em português, pull request para `dev` com `Closes #numero`. Nunca abra PR para `hml` ou `main`.
+- Siga o `CONTRIBUTING.md`: branch criada a partir de `develop`, Conventional Commits em português, pull request para `develop` com `Closes #numero`. Nunca abra PR para `main`.
 
 ## Escopo
 
@@ -19,6 +19,7 @@
 ## Código
 
 - Siga as convenções do `docs/sdd.md` (seção 9): estrutura de pastas, nomes, componentes e dados simulados. Enquanto uma convenção estiver marcada com ⏳, não invente padrão: pergunte a quem pediu a tarefa.
+- Telas seguem o `docs/design.md` (tema, telas, estados e jornadas). O `docs/prototype/app.html` é referência visual e de fluxo: reconstrua em React seguindo o SDD, nunca copie o HTML.
 - Reaproveite componentes e dados simulados existentes antes de criar novos.
 - Dependência ou padrão novo: registre nas decisões técnicas do SDD (seção 8). Dependência ou comando novo: atualize o "Como executar" do README no mesmo PR.
 - Tudo o que for simulado (dados, integrações, presença) aparece identificado como simulação na interface e no SDD (seção 6).

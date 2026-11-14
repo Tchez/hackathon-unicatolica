@@ -40,7 +40,32 @@ Pilares, em ordem de prioridade, para transformar visitas e compras pontuais em 
 
 ## Como executar
 
-⏳ Instruções de instalação, configuração e execução serão adicionadas com o código, junto com a stack definida no [SDD](docs/sdd.md).
+> ⏳ A base do código está sendo criada no épico E4; estes comandos passam a valer quando ela chegar à `develop`.
+
+**Pré-requisitos:** [Node.js](https://nodejs.org/) 22 ou mais recente e Git.
+
+```bash
+git clone https://github.com/Tchez/hackathon-unicatolica.git
+cd hackathon-unicatolica
+npm install
+npm run dev
+```
+
+Abra http://localhost:5173. O app abre sem login; para resgatar, pontuar ou entrar como lojista ou administração do shopping, escolha um usuário de exemplo. Não há senha nem configuração; os dados são simulados e ficam no navegador. No computador aparece o layout web; em telas menores que 1024 px, o layout de aplicativo. Janelas do mesmo navegador compartilham os dados: abra uma por perfil para ver as ações de um refletidas no outro.
+
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Servidor de desenvolvimento |
+| `npm run dev -- --host` | Mesmo servidor, acessível por outro aparelho na mesma rede |
+| `npm run build` | Gera a versão de produção em `dist/` |
+| `npm run preview` | Serve o build localmente |
+| `npm test` | Testes das regras (Vitest) |
+| `npm run lint` | Verifica o código (ESLint) |
+| `npm run format` | Formata o código (Prettier) |
+
+**Versão publicada:** ⏳ link público. Para instalar como aplicativo, abra o link no celular: no Android, use o botão "Instalar app"; no iPhone, Safari › Compartilhar › Adicionar à Tela de Início.
+
+**Recomeçar a demonstração:** use "Restaurar dados de demonstração" no perfil.
 
 ## Estrutura do repositório
 
@@ -49,9 +74,12 @@ Pilares, em ordem de prioridade, para transformar visitas e compras pontuais em 
 ├── README.md
 ├── CONTRIBUTING.md            # fluxo de trabalho: tarefas, branches, commits, PRs
 ├── AGENTS.md                  # regras para assistentes de IA (CLAUDE.md importa este arquivo)
+├── src/                       # código; estrutura no SDD, seção 9
 └── docs/
     ├── prd.md                 # requisitos de produto, priorizados em MoSCoW
     ├── sdd.md                 # design de software e decisões técnicas
+    ├── design.md              # UI/UX: tema, telas e jornadas
+    ├── prototype/app.html     # protótipo navegável das jornadas (referência, não código)
     └── specs/                 # fatias de implementação (000-modelo.md)
 ```
 
@@ -61,9 +89,10 @@ Pilares, em ordem de prioridade, para transformar visitas e compras pontuais em 
 |---|---|
 | [PRD](docs/prd.md) | Problema, objetivos e não objetivos, requisitos funcionais e não funcionais priorizados em MoSCoW, decisões de produto, métricas, riscos e perguntas em aberto |
 | [SDD](docs/sdd.md) | Arquitetura, stack, módulos, modelo de dados, o que é real e o que é simulado, decisões técnicas |
+| [Design](docs/design.md) | Tema visual, navegação, telas e estados, jornadas e validação; protótipo navegável em `docs/prototype/app.html` |
 | [Specs](docs/specs/000-modelo.md) | Fatias de implementação, uma por arquivo |
 | [Notion da equipe](https://cute-felidae-d88.notion.site/Proposta-de-solu-o-41778f6a5d55809f9337f0b2172416ef) | Documento da ideia entregue na primeira fase |
 
 ## Como contribuir
 
-Veja o [CONTRIBUTING.md](CONTRIBUTING.md): tarefas no quadro do GitHub, uma branch por issue, Conventional Commits e pull requests que fecham a issue. O código sobe por `dev` → `hml` → `main`, sempre por pull request.
+Veja o [CONTRIBUTING.md](CONTRIBUTING.md): tarefas no quadro do GitHub, uma branch por issue, Conventional Commits e pull requests que fecham a issue. O código sobe por `develop` → `main`, sempre por pull request.

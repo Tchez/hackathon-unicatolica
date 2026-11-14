@@ -35,18 +35,17 @@ As tarefas estão no quadro do projeto no GitHub, como issues agrupadas em épic
 ## Branches
 
 ```
-feat/21-oferta-relampago ─PR─▶ dev ─PR─▶ hml ─PR─▶ main
+branch da tarefa ─PR─▶ develop ─PR─▶ main
 ```
 
 | Branch | Papel | Recebe |
 |---|---|---|
-| `dev` | Integração do trabalho do dia | PR de branches de tarefa |
-| `hml` | Homologação: o que vai ser testado como entrega | PR só de `dev` |
-| `main` | Entrega avaliada | PR só de `hml` |
+| `develop` | Integração do trabalho do dia | PR de branches de tarefa |
+| `main` | Entrega avaliada | PR só de `develop` |
 
-- As três são protegidas: nada entra por push direto. PR para `hml` só a partir de `dev`, e para `main` só a partir de `hml`.
-- Toda tarefa nasce de uma issue, numa branch criada a partir de `dev`: `tipo/numero-descricao`, em que o tipo é o mesmo do commit (abaixo). Exemplos: `feat/21-oferta-relampago`, `docs/33-instrucoes-execucao`.
-- Quem promove `dev` → `hml` → `main` é o tech lead, nos checkpoints e antes da entrega.
+- As duas são protegidas: nada entra por push direto. PR para `main` só a partir de `develop`.
+- Toda tarefa nasce de uma issue, numa branch criada a partir de `develop`, com nome livre.
+- Quem promove `develop` → `main` é o tech lead, nos checkpoints e antes da entrega.
 
 ## Commits
 
@@ -66,11 +65,11 @@ Exemplo: `feat: liberar lote da campanha em horário surpresa (#21)`.
 
 ## Pull requests
 
-- Pequeno e de uma tarefa só, com base em `dev`. O título segue o padrão de commit.
+- Pequeno e de uma tarefa só, com base em `develop`. O título segue o padrão de commit.
 - A descrição diz o que muda e como testar, e fecha a issue com `Closes #numero`.
 - Antes de pedir revisão: o projeto roda seguindo o README; o que é simulado aparece identificado; PRD, SDD e o "Como executar" do README estão atualizados, se o PR mexe neles.
-- O tech lead revisa e faz o merge em `dev` com **squash**; a branch da tarefa é apagada depois.
-- As promoções `dev` → `hml` e `hml` → `main` usam **merge commit**, para as três branches manterem o mesmo histórico.
+- O tech lead revisa e faz o merge em `develop` com **squash**; a branch da tarefa é apagada depois.
+- A promoção `develop` → `main` usa **merge commit**, para as duas branches manterem o mesmo histórico.
 - Se o PR muda escopo, regra ou arquitetura, atualize no mesmo PR o [PRD](docs/prd.md) ou o [SDD](docs/sdd.md).
 
 ## Documentação

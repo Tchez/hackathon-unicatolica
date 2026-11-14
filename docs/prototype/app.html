@@ -1,0 +1,620 @@
+<!doctype html>
+<!--
+PROTÓTIPO NAVEGÁVEL OFICIAL DO TIME (Desafio 05, Shopping Exemplo)
+Une as jornadas e as regras de journeys.html com a UI/UX aprovada; tema, telas e jornadas em docs/design.md.
+Arquivo único, sem build, estado em memória (recarregar a página reinicia). Tudo é simulado e fictício.
+
+TELAS
+ Visitante e Não logado: início (carrossel, atalhos, lojas, grade), campanhas, ofertas, detalhe da oferta
+   (em breve, liberada, esgotada com alternativas, encerrada, já resgatada), cupom resgatado, meus cupons,
+   comprovar compra, pontos (com troca), confirmar troca, indicar, perfil (consentimento, instalar app, sair),
+   criar conta (convite, com código de indicação opcional), aviso de lote liberado.
+ Lojista: início, criar oferta relâmpago (com prévia ao vivo), acompanhar oferta (encerrar), confirmar compra, perfil.
+ Shopping: painel da campanha (lotes, liberar lote, números agregados), campanhas, ofertas relâmpago das lojas, perfil.
+ Painel de demonstração (fora do app): perfil/usuário, jornadas J1 a J8 com "Próximo passo", reiniciar.
+
+JORNADAS J1 a J8: todas chegam ao fim pelo botão "Próximo passo". Cada passo executa antes, se faltar, a ação manual
+ do passo anterior (marcar presença, resgatar, gerar código...), então dá para clicar só em "Próximo passo".
+
+DECISÕES PRÓPRIAS (validar com o time)
+ 1. Escolher uma jornada reinicia o estado (evita lote já liberado, cupons antigos etc.). "Reiniciar demonstração" faz o mesmo.
+ 2. O lote das placas (surpresa) é liberado só por "Liberar lote agora" (Shopping); dura 5 min. Sem liberação automática.
+ 3. Contagem da campanha no início: "termina em 2 h" a partir da abertura (a campanha é "hoje").
+ 4. Jornada 3: "Simulação: outros visitantes esgotam o lote" zera o estoque por um botão do passo.
+ 5. Pontos com 1 casa decimal (1 ponto a cada R$ 10, compras pequenas pontuam). Recompensas: R$ 10 (500), estacionamento 2 h (500),
+    R$ 25 (1.200); limite de 1 resgate por tipo por pessoa. Sem validade de pontos (não decidida).
+ 6. Cupons e código de compra: cupom vale 60 min, código vale 10 min e é de uso único; "Simular vencimento" só para demonstrar o erro.
+ 7. Um cupom por pessoa por oferta. Ofertas relâmpago: 1 min (demonstração), 3 min, 10 min ou 1 h.
+ 8. Ana ao "criar conta" é sempre a conta da Ana (protótipo). Código de indicação aceito: BRUNO100.
+ 9. Menu do topo abre o perfil; busca, "Ver todas" e a grade original (Lojas, Mapa...) mostram aviso "fora do protótipo".
+ 10. Números do painel do Shopping incluem um histórico inicial de demonstração, só agregados.
+O logo é carregado só por link remoto (nada salvo no repositório).
+-->
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shopping Exemplo · Protótipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#B05828;--gold:#C9A45C;--grey:#f2f2f2;--line:#e6e6e6;--text:#222;--muted:#666;--green:#2E7D32;--green-t:#E6F1E3;--rust-t:#F6E7DD;--gold-t:#F5ECD8;--gold-d:#8A6A22;--brown:#7F562C;--brown-t:#EFE6DC;--red:#B3261E}
+*{box-sizing:border-box;margin:0;padding:0}
+button{font-family:inherit}
+body{background:#e9e9e9;font-family:'Noto Sans','Open Sans',system-ui,sans-serif;color:var(--text);padding:28px 24px;min-height:100vh}
+.stage{display:flex;gap:32px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.phone{flex:none;width:390px;height:844px;background:#fff;border:1px solid #cfcfcf;border-radius:40px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.status{height:32px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:13px;font-weight:600}
+.status .r{display:flex;gap:5px;align-items:center}
+.status .bat{width:22px;height:11px;border:1.5px solid currentColor;border-radius:3px;position:relative}
+.status .bat:after{content:"";position:absolute;inset:1.5px;right:5px;background:currentColor;border-radius:1px}
+.bar{height:56px;flex:none;display:grid;grid-template-columns:48px 1fr 48px;align-items:center;border-bottom:1px solid var(--line)}
+.bar h1{font-size:17px;font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar button{width:48px;height:48px;background:none;border:0;display:flex;align-items:center;justify-content:center;color:#222;cursor:pointer}
+.ic{width:24px;height:24px;fill:currentColor;flex:none}
+.scroll{flex:1;overflow-y:auto;padding:16px;scrollbar-width:none;display:flex;flex-direction:column}
+.scroll>*{flex:none}
+.scroll::-webkit-scrollbar{display:none}
+.scroll.n{padding:0}
+.pad{padding:16px}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 10px}
+.sec h2{font-size:16px;font-weight:600}
+.sec a{font-size:14px;color:var(--accent);font-weight:500;text-decoration:none;cursor:pointer}
+.stores{display:flex;gap:12px;overflow:hidden}
+.stores div{width:52px;height:52px;border-radius:50%;background:var(--grey);flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#777;text-align:center;line-height:1.1}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 8px}
+.sc{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11.5px;color:#444;text-align:center;min-height:44px;cursor:pointer;flex:none}
+.sc i{width:64px;height:64px;border-radius:8px;background:var(--grey);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.sc i .ic{width:28px;height:28px}
+.card{background:var(--grey);border-radius:8px;padding:14px;display:flex;gap:12px;align-items:center;margin-top:16px;flex:none}
+.card .ico{width:44px;height:44px;border-radius:8px;background:#fff;color:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+.card b{font-size:15px;font-weight:600;display:block}
+.card small{font-size:13px;color:var(--muted)}
+.compact{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);min-height:48px;flex:none}
+.compact .ic{color:var(--accent)}
+.compact b{font-size:15px;font-weight:600}
+.compact span{font-size:13px;color:var(--muted);flex:1}
+.bar-p{height:8px;border-radius:4px;background:#e4e4e4;overflow:hidden;flex:none}
+.bar-p i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.offer{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center;min-height:72px;cursor:pointer;flex:none}
+.offer .logo{width:52px;height:52px;border-radius:50%;background:var(--grey);color:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+.offer b{font-size:15px;font-weight:600;display:block}
+.offer .s{font-size:13px;color:var(--muted)}
+.offer>div:nth-child(2){flex:1;min-width:0}
+.chip{display:inline-block;background:var(--grey);border-radius:6px;padding:3px 8px;font-size:12px;color:#444;margin:4px 6px 0 0}
+.chip.a{color:var(--accent);font-weight:600}
+.chip.live{background:var(--green-t);color:var(--green);font-weight:600}
+.chip.soon{background:var(--gold-t);color:var(--gold-d);font-weight:600}
+.chip.out{background:var(--rust-t);color:var(--accent);font-weight:600}
+.chip.end{background:#e8e8e8;color:#666;font-weight:600}
+.li{display:flex;align-items:center;gap:14px;min-height:56px;border-bottom:1px solid var(--line);font-size:15px;flex:none}
+.li .ic{color:var(--accent)}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border:0;border-radius:8px;background:var(--accent);color:#fff;font:600 16px 'Noto Sans',sans-serif;cursor:pointer;flex:none;margin-top:12px;text-align:center;padding:0 14px}
+.btn.sec2{background:var(--grey);color:var(--text)}
+.btn.out{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.tag{display:inline-block;background:var(--grey);color:#555;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.photo{height:180px;border-radius:8px;background:linear-gradient(135deg,#3c3c44,#6a6a76 55%,#2b2b32);display:flex;align-items:center;justify-content:center;color:#cfcfd6;flex:none}
+.photo .ic{width:64px;height:64px}
+.photo.gold{background:linear-gradient(135deg,#8A6A22,#C9A45C 70%);color:#fff}
+.h2x{font-size:20px;font-weight:600;margin-top:14px;flex:none}
+.sub{font-size:14px;color:var(--muted);margin-top:2px;flex:none}
+.price{display:flex;align-items:baseline;gap:8px;margin-top:6px;flex:none}
+.price s{color:#888;font-size:14px}
+.price b{font-size:26px;font-weight:700;color:var(--accent)}
+.note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px;flex:none}
+.warn{display:flex;gap:10px;align-items:center;background:var(--grey);border-radius:8px;padding:12px;margin-top:14px;font-size:14px;min-height:48px;flex:none}
+.warn .ic{color:var(--accent)}
+.warn .tag{margin-left:auto;background:#fff}
+.code{background:var(--grey);border-radius:8px;text-align:center;padding:22px 12px;margin-top:4px;flex:none}
+.code b{font-size:44px;font-weight:700;letter-spacing:6px;color:var(--text)}
+.code.sm b{font-size:30px;letter-spacing:4px}
+.code div{margin-top:8px;font-size:14px;color:var(--muted)}
+.field{margin-top:14px;flex:none}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.inp{height:48px;border-radius:8px;background:var(--grey);display:flex;align-items:center;padding:0 14px;font-size:15px;justify-content:space-between}
+input.inp,select.inp{width:100%;border:0;font:inherit;font-size:15px;color:inherit;outline:none}
+input.inp:focus,select.inp:focus{box-shadow:0 0 0 2px var(--accent)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:none}
+.pv{border:1px solid var(--line);border-radius:8px;padding:2px 12px;margin-top:6px;flex:none}
+.pv .offer{border:0;cursor:default}
+.t{color:var(--accent);font-weight:600}
+.t.g{color:var(--green)}
+.msg{border-radius:8px;padding:14px;margin-top:14px;font-size:14px;line-height:1.45;flex:none}
+.msg.ok{background:var(--green-t);color:#1d5a21}
+.msg.err{background:#fbe9e7;color:var(--red)}
+.msg.info{background:var(--gold-t);color:#5a4616}
+.tile{background:var(--grey);border-radius:8px;padding:14px;flex:none}
+.tile b{font-size:26px;font-weight:700;display:block;color:var(--accent)}
+.tile span{font-size:12.5px;color:var(--muted)}
+.tog{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);flex:none}
+.tog div{flex:1}.tog b{display:block;font-size:15px;font-weight:600}.tog small{font-size:13px;color:var(--muted)}
+.sw{width:48px;height:28px;border-radius:14px;background:#cfcfcf;border:0;position:relative;flex:none;cursor:pointer}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--green)}.sw.on:after{left:23px}
+/* carrossel */
+.car{position:relative;flex:none;overflow:hidden;touch-action:pan-y;user-select:none}
+.track{display:flex;transition:transform .45s ease}
+.slide{flex:none;width:388px;height:256px;padding:100px 20px 34px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;color:#fff;cursor:pointer}
+.slide small{font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;opacity:.9}
+.slide b{font-size:22px;font-weight:700;line-height:1.2}
+.slide span{font-size:14px;opacity:.95}
+.s1{background:linear-gradient(135deg,#B05828,#C9A45C)}
+.s2{background:linear-gradient(135deg,#1F5E24,#2E7D32 55%,#6FA65B)}
+.s3{background:linear-gradient(135deg,#8A6A22,#C9A45C 70%)}
+.cd{display:inline-block;align-self:flex-start;margin-top:6px;background:rgba(255,255,255,.22);border-radius:6px;padding:3px 10px;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;font-style:normal}
+.dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center}
+.dots button{width:28px;height:20px;background:none;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.dots button i{width:7px;height:7px;border-radius:4px;background:rgba(255,255,255,.55);transition:.25s}
+.dots button.on i{width:18px;background:#fff}
+.rowsc{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:16px 16px 0;flex:none}
+.rowsc::-webkit-scrollbar{display:none}
+.rowsc .sc{flex:none;width:72px}
+.rowsc .sc i{width:56px;height:56px}
+.rowsc .sc:nth-child(4n+1) i{background:var(--rust-t);color:#B05828}
+.rowsc .sc:nth-child(4n+2) i{background:var(--green-t);color:var(--green)}
+.rowsc .sc:nth-child(4n+3) i{background:var(--gold-t);color:var(--gold-d)}
+.rowsc .sc:nth-child(4n+4) i{background:var(--brown-t);color:var(--brown)}
+.home .status,.home .bar{position:absolute;left:0;right:0;z-index:3;background:transparent;color:#fff;border-bottom:0;transition:background .2s,color .2s}
+.home .status{top:0}.home .bar{top:32px}
+.home .bar button{color:inherit}
+.home .status.solid,.home .bar.solid{background:#fff;color:#222}
+.home .bar.solid{box-shadow:0 1px 0 var(--line),0 4px 12px rgba(0,0,0,.06)}
+.home .bar.solid h1.brand img{filter:none}
+.home .car:before{content:"";position:absolute;inset:0 0 auto;height:110px;background:linear-gradient(rgba(60,28,8,.38),rgba(60,28,8,0));z-index:2;pointer-events:none}
+.home .bar h1.brand{display:flex;justify-content:center;align-items:center}
+.home .bar h1.brand img{height:34px;width:auto;filter:brightness(0) invert(1)}
+/* pontos */
+.hd{flex:none;color:#fff;padding:0 16px 20px}
+.hdbar{height:56px;display:grid;grid-template-columns:48px 1fr 48px;align-items:center;margin:0 -16px}
+.hdbar h1{font-size:17px;font-weight:600;text-align:center}
+.hdbar button{width:48px;height:48px;background:none;border:0;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.bal{display:flex;align-items:center;gap:10px;margin-top:6px}
+.bal .ic{width:44px;height:44px}
+.bal b{font-size:52px;font-weight:700;line-height:1}
+.exp{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;margin-top:10px}
+.exp .tag{background:rgba(255,255,255,.25);color:#fff}
+.hbtn{flex:none;margin-top:14px;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 22px;border-radius:22px;border:1.5px solid #fff;background:none;color:#fff;font:600 15px 'Noto Sans',sans-serif;cursor:pointer}
+.over{flex:none;position:relative;z-index:2;margin:12px 16px 0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px}
+.over b{font-size:15px;font-weight:600;display:block;margin-bottom:10px}
+.rw{flex:none;display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);min-height:68px;cursor:pointer}
+.rw .logo{flex:none;width:48px;height:48px;border-radius:8px;background:var(--grey);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.rw .m{flex:1}
+.rw b{font-size:15px;font-weight:600;display:block}
+.rw small{font-size:13px;color:var(--muted)}
+.pts{flex:none;font-size:14px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:4px}
+.pts .ic{width:16px;height:16px}
+.logo.c-rust{background:var(--rust-t)!important;color:#B05828!important}
+.logo.c-green{background:var(--green-t)!important;color:var(--green)!important}
+.logo.c-gold{background:var(--gold-t)!important;color:var(--gold-d)!important}
+.logo.c-brown{background:var(--brown-t)!important;color:var(--brown)!important}
+.ptsx{background:linear-gradient(160deg,#B05828,#C9A45C) 0 0/100% var(--toph,300px) no-repeat,#fff}
+.ptsx .status{background:transparent;color:#fff}
+.ptsx .hd{background:transparent}
+.banner{height:132px;border-radius:8px;background:linear-gradient(135deg,#E3C98A 0%,#C9A45C 45%,#8F6A2C 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:14px;color:#fff;position:relative;overflow:hidden;flex:none;gap:2px}
+.banner:before{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.16) 0 18px,rgba(255,255,255,.06) 18px 36px)}
+.banner span,.banner b{position:relative}
+.banner b{font-size:20px}
+.toast{position:absolute;top:44px;left:12px;right:12px;z-index:30;background:#222;color:#fff;border-radius:8px;padding:12px 14px;font-size:14px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none;cursor:pointer}
+.toast.show{display:block}
+/* painel */
+.panel{flex:none;width:360px;background:#fff;border-radius:12px;padding:18px;max-height:844px;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,.08);font-size:14px}
+.panel h3{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 8px}
+.panel h3:first-child{margin-top:0}
+.panel .pb{display:flex;flex-wrap:wrap;gap:6px}
+.panel button{font:inherit;cursor:pointer}
+.panel .pill{border:1.5px solid var(--line);background:#fff;border-radius:18px;padding:6px 12px;font-size:13px;font-weight:600}
+.panel .pill.on{border-color:var(--accent);background:var(--rust-t);color:var(--accent)}
+.panel .usr{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;font-size:13px;width:100%;text-align:left;margin-top:6px;display:flex;justify-content:space-between}
+.panel .usr.on{border-color:var(--green);background:var(--green-t)}
+.panel .jb{display:block;width:100%;text-align:left;border:0;background:var(--grey);border-radius:8px;padding:9px 12px;margin-bottom:6px;font-size:13px;line-height:1.35}
+.panel .jb.on{background:var(--rust-t);font-weight:600}
+.panel ol{list-style:none;margin:10px 0}
+.panel ol li{display:flex;gap:10px;padding:8px 8px;border-radius:8px;font-size:13px;line-height:1.4;cursor:pointer;margin-bottom:2px}
+.panel ol li b{flex:none;width:22px;height:22px;border-radius:50%;background:var(--grey);display:flex;align-items:center;justify-content:center;font-size:12px}
+.panel ol li.cur{background:var(--gold-t);font-weight:600}
+.panel ol li.cur b{background:var(--accent);color:#fff}
+.panel ol li.done b{background:var(--green);color:#fff}
+.panel .go{width:100%;border:0;background:var(--accent);color:#fff;border-radius:8px;min-height:44px;font-weight:600;font-size:15px}
+.panel .go:disabled{opacity:.5}
+.panel .rst{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:8px;min-height:40px;font-weight:600;margin-top:16px}
+.panel small{color:var(--muted);font-size:12px;line-height:1.4;display:block;margin-top:6px}
+.panel .who{font-size:13px;margin-top:8px;color:var(--muted)}
+@media(max-width:820px){body{padding:12px}.panel{width:390px;max-height:none}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="menu" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></symbol>
+<symbol id="search" viewBox="0 0 24 24"><path d="M10 3a7 7 0 015.6 11.2l5 5-1.4 1.4-5-5A7 7 0 1110 3zm0 2a5 5 0 100 10 5 5 0 000-10z"/></symbol>
+<symbol id="back" viewBox="0 0 24 24"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></symbol>
+<symbol id="store" viewBox="0 0 24 24"><path d="M4 4h16l1 5a3 3 0 01-2 2.8V20H5v-8.2A3 3 0 013 9zm3 9v5h4v-5zm6 0v5h4v-5z"/></symbol>
+<symbol id="food" viewBox="0 0 24 24"><path d="M7 2v8a2 2 0 01-1 1.7V22H4V11.7A2 2 0 013 10V2h1.5v6h1V2zm9 0c2 1 3 4 3 7h-2v13h-2z"/></symbol>
+<symbol id="tool" viewBox="0 0 24 24"><path d="M21 7l-4 4-3-3 4-4a5 5 0 00-6 6L3 18l3 3 8-8a5 5 0 007-6z"/></symbol>
+<symbol id="news" viewBox="0 0 24 24"><path d="M3 4h15v14a2 2 0 002 2H5a2 2 0 01-2-2zm2 3v3h11V7zm0 5v2h11v-2zm0 4v2h7v-2zM19 8h2v10a1 1 0 01-2 0z"/></symbol>
+<symbol id="event" viewBox="0 0 24 24"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3zM6 10v10h12V10zm2 2h3v3H8z"/></symbol>
+<symbol id="tag" viewBox="0 0 24 24"><path d="M3 3h8l10 10-8 8L3 11zm4 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/></symbol>
+<symbol id="coupon" viewBox="0 0 24 24"><path d="M3 6h18v4a2 2 0 000 4v4H3v-4a2 2 0 000-4zm6 2v2h2V8zm0 3v2h2v-2zm0 3v2h2v-2z"/></symbol>
+<symbol id="film" viewBox="0 0 24 24"><path d="M4 4h16v16H4zm2 2v2h2V6zm10 0v2h2V6zM6 11v2h2v-2zm10 0v2h2v-2zM6 16v2h2v-2zm10 0v2h2v-2zM10 6v12h4V6z"/></symbol>
+<symbol id="map" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7zm0 4a3 3 0 100 6 3 3 0 000-6z"/></symbol>
+<symbol id="camp" viewBox="0 0 24 24"><path d="M3 10v4l3 1 1 5h3l-1-4.5L17 19V5L9 8.5H5zm16 0a3 3 0 010 4z"/></symbol>
+<symbol id="bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></symbol>
+<symbol id="star" viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.4 7L12 17.600 5.800 21l1.400-7L2 9.300l7-.8z"/></symbol>
+<symbol id="receipt" viewBox="0 0 24 24"><path d="M5 2h14v20l-3-2-2 2-2-2-2 2-2-2-3 2zm3 5v2h8V7zm0 4v2h8v-2zm0 4v2h5v-2z"/></symbol>
+<symbol id="share" viewBox="0 0 24 24"><path d="M18 2a3 3 0 11-2.600 4.500L9 9.700a3 3 0 010 1.600l6.400 3.200A3 3 0 1114.500 16l-6.400-3.200a3 3 0 110-3.600l6.400-3.200A3 3 0 0118 2z"/></symbol>
+<symbol id="chev" viewBox="0 0 24 24"><path d="M9 4l8 8-8 8-1.400-1.400L14.200 12 7.600 5.400z"/></symbol>
+<symbol id="clock" viewBox="0 0 24 24"><path d="M12 2a10 10 0 110 20 10 10 0 010-20zm-1 5v6l5 3 1-1.700-4-2.300V7z"/></symbol>
+<symbol id="pin" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7zm0 4a3 3 0 100 6 3 3 0 000-6z"/></symbol>
+<symbol id="gpu" viewBox="0 0 24 24"><path d="M2 6h2v12H2zm4 2h16v8H6zm3 2v4h4v-4zm7 0v4h3v-4z"/></symbol>
+<symbol id="drop" viewBox="0 0 24 24"><path d="M6 10h12v6a4 4 0 01-4 4h-4a4 4 0 01-4-4zm12 1h2a2 2 0 010 4h-2zM8 2h2v4H8zm4 0h2v4h-2z"/></symbol>
+<symbol id="head" viewBox="0 0 24 24"><path d="M12 3a9 9 0 019 9v6a2 2 0 01-2 2h-2v-8h4a7 7 0 00-14 0h4v8H5a2 2 0 01-2-2v-6a9 9 0 019-9z"/></symbol>
+<symbol id="book" viewBox="0 0 24 24"><path d="M5 3h13a2 2 0 012 2v16H7a2 2 0 01-2-2zm2 2v12h11V5zm0 14h11v-.5H7z"/></symbol>
+<symbol id="user" viewBox="0 0 24 24"><path d="M12 2a5 5 0 110 10 5 5 0 010-10zm-9 20a9 9 0 0118 0z"/></symbol>
+<symbol id="check" viewBox="0 0 24 24"><path d="M9 16.200L4.800 12l-1.400 1.400L9 19 21 7l-1.400-1.400z"/></symbol>
+<symbol id="caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></symbol>
+<symbol id="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#C9A45C"/><circle cx="12" cy="12" r="7" fill="none" stroke="#fff" stroke-width="1.6"/><path fill="#fff" d="M11 7h2v10h-2z"/></symbol>
+</defs></svg>
+<div class="stage"><div class="phone" id="phone"></div><aside class="panel" id="panel"></aside></div>
+<div id="toast-src" hidden></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const f1=n=>String(Math.round(n*10)/10).replace('.',',');
+const money=n=>'R$ '+Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const ic=(n,c='')=>`<svg class="ic ${c}"><use href="#${n}"/></svg>`;
+const LOGO='https://www.capimdouradosc.com.br/images/logo.png';
+const people={guest:{name:'Convidado',role:'Não logado'},ana:{name:'Ana',role:'Visitante'},bruno:{name:'Bruno',role:'Visitante'},tech:{name:'TechPlay',role:'Lojista'},cafe:{name:'Café Ipê',role:'Lojista'},admin:{name:'Administração',role:'Shopping'}};
+const ROLES=['Não logado','Visitante','Lojista','Shopping'];
+const USERDESC={guest:'Sem conta',ana:'Nova · 0 pontos',bruno:'420 pontos · 1 cupom',tech:'Eletrônicos · campanha 11/11',cafe:'Fora da campanha',admin:'Shopping Exemplo'};
+const REWARDS=[{id:'d10',title:'R$ 10 de desconto',sub:'Cupom para usar nas lojas',cost:500,icon:'coupon',c:'c-rust'},{id:'park',title:'Estacionamento 2 h',sub:'Saída sem cobrança',cost:500,icon:'pin',c:'c-green',sim:true},{id:'d25',title:'R$ 25 de desconto',sub:'Cupom para usar nas lojas',cost:1200,icon:'coupon',c:'c-gold'}];
+const GATED=new Set(['coupons','purchase','points','exchange','referral']);
+let state,current='guest',screen='home',hist=[],selected='gpu',rewardSel='d10',sel=null,carI=0,carT=null,carMoved=false,panelRole='Não logado',jIdx=-1,jStep=-1,signupCtx={reason:'general',ret:'home'},msg='',fp='',toastT=null,toastGo=null;
+let form={code:'',value:'',prod:'Café expresso',disc:20,dur:180,qty:5,ref:'',name:'',email:''};
+
+function initial(){const n=Date.now();return{campEnd:n+2*3600e3,
+ users:{ana:{points:0,coupons:[],history:[],present:false,referrer:null,bonus:false,marketing:false,rewards:[],invited:[]},
+  bruno:{points:420,coupons:[{id:'CAFE20',title:'Café Ipê · 20% de desconto',store:'Café Ipê',used:false,end:n+3*3600e3}],history:[{title:'Compra na TechPlay',points:200},{title:'Compra no Café Ipê',points:20},{title:'Bônus de indicação (Carla)',points:100},{title:'Compra na TechPlay',points:100}],present:false,referrer:null,bonus:true,marketing:false,rewards:[],invited:[{name:'Carla',done:true}]}},
+ offers:[
+  {id:'gpu',title:'Placa de vídeo',store:'TechPlay',floor:'Piso L2',owner:'tech',discount:60,orig:2499,stock:5,total:5,start:null,end:null,closed:false,campaign:true,icon:'gpu'},
+  {id:'livro',title:'Box de livros',store:'Livraria Folha',floor:'Piso L1',owner:null,discount:40,orig:120,stock:18,total:30,start:n-3600e3,end:n+2*3600e3,closed:false,campaign:true,icon:'book'},
+  {id:'moda',title:'Tênis casual',store:'Moda Sol',floor:'Piso L1',owner:null,discount:30,orig:300,stock:11,total:20,start:n-3600e3,end:n+2*3600e3,closed:false,campaign:true,icon:'tag'},
+  {id:'coffee',title:'Café expresso',store:'Café Ipê',floor:'Praça de alimentação',owner:'cafe',discount:20,orig:12,stock:9,total:12,start:n,end:n+20*60e3,closed:false,campaign:false,icon:'drop'}],
+ codes:[],purchases:[],notices:[],results:{},seq:1000}}
+state=initial();
+
+const user=()=>state.users[current]||null;
+const isStaff=()=>['Lojista','Shopping'].includes(people[current].role);
+const offerOf=id=>state.offers.find(o=>o.id===id);
+function status(o){const n=Date.now();if(o.closed||(o.end&&n>=o.end))return'Encerrada';if(!o.start||n<o.start)return'Em breve';if(o.stock<=0)return'Esgotada';return'Liberada'}
+function rem(end){const s=Math.max(0,Math.ceil((end-Date.now())/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60,p=v=>String(v).padStart(2,'0');return h?`${h}:${p(m)}:${p(x)}`:`${p(m)}:${p(x)}`}
+const clk=end=>`<span data-end="${end}">${rem(end)}</span>`;
+const hhmm=()=>new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+const finalPrice=o=>o.orig?o.orig*(1-o.discount/100):null;
+const flashes=()=>state.offers.filter(o=>!o.campaign);
+const liveFlash=()=>[...flashes()].reverse().find(o=>status(o)==='Liberada');
+const hasCoupon=(uid,oid)=>state.users[uid].coupons.some(c=>c.offer===oid);
+const lastCode=uid=>[...state.codes].reverse().find(c=>c.user===uid);
+const activeCode=uid=>{const c=lastCode(uid);return c&&!c.used&&c.end>Date.now()?c:null};
+const fmtCode=c=>c.slice(0,3)+' '+c.slice(3);
+function nextTarget(p){return REWARDS.find(r=>r.cost>p)||null}
+
+/* ---------- ações de domínio ---------- */
+function doClaim(uid,oid){const o=offerOf(oid),u=state.users[uid];if(status(o)!=='Liberada'||hasCoupon(uid,oid))return null;o.stock--;const c={id:'CUP'+(++state.seq),title:`${o.title} · ${o.discount}% de desconto`,store:o.store,offer:oid,used:false,end:Date.now()+60*60e3};u.coupons.push(c);return c}
+function doRelease(){const g=offerOf('gpu');if(status(g)!=='Em breve')return false;g.start=Date.now();g.end=Date.now()+5*60e3;for(const[id,u]of Object.entries(state.users))if(u.present)state.notices.push({id,text:'Lote liberado! As placas de vídeo já estão disponíveis.',offer:'gpu',read:false});return true}
+function newCode(uid){const c={code:String(100000+Math.floor(Math.random()*899999)),user:uid,end:Date.now()+10*60e3,used:false};state.codes.push(c);delete state.results[uid];return c}
+function doConfirm(codeStr,value,storeId){const rec=state.codes.find(c=>c.code===String(codeStr).replace(/\D/g,''));
+ if(!rec)return{ok:false,msg:'Código inválido. Confira os 6 dígitos com o cliente.'};
+ if(rec.used)return{ok:false,msg:'Código já usado. Nenhum ponto foi creditado novamente.'};
+ if(rec.end<=Date.now())return{ok:false,msg:'Código vencido. Peça ao cliente um novo código.'};
+ if(!Number.isFinite(value)||value<=0)return{ok:false,msg:'Informe um valor de compra maior que zero.'};
+ rec.used=true;const buyer=state.users[rec.user],pts=Math.round(value)/10;buyer.points=Math.round((buyer.points+pts)*10)/10;
+ buyer.history.unshift({title:'Compra na '+people[storeId].name,points:pts});state.purchases.push({user:rec.user,store:storeId,value,points:pts});
+ let bonus=0;if(buyer.referrer&&!buyer.bonus){buyer.bonus=true;bonus=100;buyer.points+=100;buyer.history.unshift({title:'Bônus de indicação',points:100});const r=state.users[buyer.referrer];r.points+=100;r.history.unshift({title:`Bônus de indicação (${people[rec.user].name})`,points:100});const inv=r.invited.find(i=>i.name===people[rec.user].name);if(inv)inv.done=true}
+ state.results[rec.user]={pts,bonus,value,store:people[storeId].name};
+ return{ok:true,msg:`Compra confirmada: ${money(value)}. ${f1(pts)} pontos creditados${bonus?' + bônus de indicação de 100 pontos':''}. Código consumido.`}}
+function doRedeem(uid,rid){const u=state.users[uid],r=REWARDS.find(x=>x.id===rid);if(!r||u.points<r.cost||u.rewards.includes(rid))return false;u.points=Math.round((u.points-r.cost)*10)/10;u.rewards.push(rid);u.history.unshift({title:'Troca: '+r.title,points:-r.cost});u.coupons.push({id:'BEN'+(++state.seq),title:r.title,store:'Shopping Exemplo',used:false,end:Date.now()+60*60e3,sim:!!r.sim});return true}
+function doPublish(){const q=Number(form.qty),d=Number(form.disc),dur=Number(form.dur);if(!form.prod.trim()||!Number.isInteger(q)||q<1||q>1000||!(d>=1&&d<=90))return null;const o={id:'f'+(++state.seq),title:form.prod.trim(),store:people[current].name,floor:'',owner:current,discount:d,orig:null,stock:q,total:q,start:Date.now(),end:Date.now()+dur*1000,closed:false,campaign:false,icon:'bolt'};state.offers.push(o);return o}
+
+/* ---------- navegação ---------- */
+const homeOf=()=>current==='admin'?'shome':people[current].role==='Lojista'?'mhome':'home';
+function go(s){if(!user()&&GATED.has(s)){signupCtx={reason:s,ret:s};if(screen!=='signup')hist.push(screen);screen='signup';msg='';render();return}
+ if(s===homeOf()){hist=[]}else if(s!==screen)hist.push(screen);screen=s;msg='';render();const sc=$('sc');if(sc)sc.scrollTop=0}
+function back(){screen=hist.pop()||homeOf();msg='';render()}
+function needLogin(reason,ret){signupCtx={reason,ret:ret||screen};hist.push(screen);screen='signup';msg='';render()}
+function switchUser(id,s){current=id;hist=[];screen=s||homeOf();msg='';render();renderPanel();checkNotices()}
+function menuTap(){user()?go('profile'):needLogin('general','home')}
+function toast(t,target){const e=$('toast');e.textContent=t;e.classList.add('show');toastGo=target||null;clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),5000)}
+function checkNotices(){const n=state.notices.find(x=>x.id===current&&!x.read);if(n){n.read=true;toast('Simulação · '+n.text+' Toque para ver.',n.offer)}}
+function openOffer(id){selected=id;go('detail')}
+function openTrack(id){sel=id;go('track')}
+
+/* ---------- componentes ---------- */
+function chipFor(o){const s=status(o),c={'Liberada':'live','Em breve':'soon','Esgotada':'out','Encerrada':'end'}[s];return`<span class="chip ${c}">${s}</span>`}
+function offerRow(o,click){const s=status(o),extra=s==='Liberada'?`<span class="chip">${o.stock} restantes</span><span class="chip a">${clk(o.end)}</span>`:s==='Em breve'?'<span class="chip">Lote surpresa</span>':'';
+ return`<div class="offer" onclick="${click||`openOffer('${o.id}')`}"><div class="logo">${ic(o.icon)}</div><div><b>${esc(o.title)} · ${o.discount}% OFF</b><div class="s">${esc(o.store)}</div>${chipFor(o)}${extra}</div>${ic('chev','')}</div>`}
+const sc=(icon,label,act)=>`<div class="sc" onclick="${act}"><i>${ic(icon)}</i>${label}</div>`;
+const tile=(v,l)=>`<div class="tile"><b>${v}</b><span>${l}</span></div>`;
+const tagS='<span class="tag">Simulação</span>',tagV='<span class="tag">Valor ilustrativo</span>';
+const hist_rows=u=>u.history.map(h=>`<div class="li" style="min-height:52px"><div style="flex:1">${esc(h.title)}</div><span class="t ${h.points>0?'g':''}">${h.points>0?'+':''}${f1(h.points)} pts</span></div>`).join('')||'<div class="note" style="text-align:left">Sua primeira compra começa essa história.</div>';
+const soon=()=>toast('Fora do protótipo.');
+
+/* ---------- telas ---------- */
+function sHome(){const u=user(),g=offerOf('gpu'),fl=liveFlash(),pend=u&&u.present&&status(g)==='Liberada'&&!hasCoupon(current,'gpu');
+ const t=nextTarget(u?u.points:0);
+ const s1=`<div class="slide s1" onclick="slideGo('campaigns')"><small>Campanha</small><b>11/11 no Shopping Exemplo</b><span>${status(g)==='Em breve'?'Próximo lote: surpresa · hoje':status(g)==='Liberada'?'Lote liberado: placas de vídeo com 60% OFF':'Lote das placas encerrado'}</span><em class="cd">Termina em ${clk(state.campEnd)}</em></div>`;
+ const s2=fl?`<div class="slide s2" onclick="slideGo('detail','${fl.id}')"><small>Oferta relâmpago</small><b>${esc(fl.store)} · ${esc(fl.title)} ${fl.discount}% OFF</b><span>Termina em ${clk(fl.end)} · ${fl.stock} restantes</span></div>`:`<div class="slide s2" onclick="slideGo('offers')"><small>Oferta relâmpago</small><b>Nenhuma oferta agora</b><span>Volte em breve ou veja todas as ofertas</span></div>`;
+ const s3=u?`<div class="slide s3" onclick="slideGo('points')"><small>Seus pontos</small><b>${f1(u.points)} pontos</b><span>${t?`Faltam ${f1(t.cost-u.points)} para ${t.title}`:'Você pode trocar por qualquer recompensa'}</span></div>`:`<div class="slide s3" onclick="slideGo('signup')"><small>Pontos e indicação</small><b>Ganhe pontos a cada compra</b><span>Crie sua conta · 1 ponto a cada R$ 10</span></div>`;
+ return{cls:'home',body:`<div class="car" id="car"><div class="track">${s1}${s2}${s3}</div><div class="dots"><button aria-label="Slide 1"><i></i></button><button aria-label="Slide 2"><i></i></button><button aria-label="Slide 3"><i></i></button></div></div>
+ <div class="rowsc">${sc('camp','Campanhas',"go('campaigns')")}${sc('tag','Ofertas',"go('offers')")}${sc('coupon','Meus cupons',"go('coupons')")}${sc('receipt','Comprovar compra',"go('purchase')")}${sc('star','Pontos',"go('points')")}${sc('share','Indicar',"go('referral')")}</div>
+ <div class="pad" style="padding-top:0">
+ ${pend?`<div class="card" style="cursor:pointer" onclick="openOffer('gpu')"><div class="ico">${ic('bolt')}</div><div style="flex:1"><b>Lote liberado agora</b><small>Placas de vídeo com 60% OFF · toque para resgatar</small></div>${tagS}</div>`:''}
+ ${!u?`<div class="card"><div class="ico">${ic('star')}</div><div style="flex:1"><b>Pontos e indicação</b><small>1 ponto a cada R$ 10 · indique e ganhem 100 pontos cada</small></div>${tagV}</div><button class="btn" onclick="needLogin('general','home')">Criar conta</button>`:''}
+ <div class="sec"><h2>Lojas</h2><a onclick="soon()">Ver todas</a></div>
+ <div class="stores"><div>Tech<br>Play</div><div>Café<br>Ipê</div><div>Livraria<br>Folha</div><div>Moda<br>Sol</div><div>Loja E</div><div>Loja F</div></div>
+ <div class="sec"><h2>Atalhos</h2></div>
+ <div class="grid">${sc('store','Lojas','soon()')}${sc('food','Alimentação','soon()')}${sc('tool','Serviços','soon()')}${sc('news','Notícias','soon()')}${sc('event','Eventos','soon()')}${sc('tag','Promoções',"go('offers')")}${sc('coupon','Cupons',"go('coupons')")}${sc('film','Cinema','soon()')}${sc('map','Mapa','soon()')}</div>
+ <div style="height:8px;flex:none"></div></div>`}}
+function slideGo(s,id){if(carMoved)return;if(s==='detail')openOffer(id);else go(s)}
+
+function sCampaigns(){const u=user(),g=offerOf('gpu'),lote2=status(g);
+ return{title:'Campanhas',body:`<div class="banner"><span style="font-size:12px;font-weight:600;letter-spacing:.6px">CAMPANHA RECORRENTE</span><b>11/11 no Shopping Exemplo</b><span style="font-size:13px">Termina em ${clk(state.campEnd)}</span></div>
+ <div class="sec"><h2>Lotes de hoje</h2></div>
+ <div class="compact">${ic('clock')}<b>Lote 1 · 10h</b><span>Livraria Folha e Moda Sol</span><span class="chip live" style="flex:none;margin:0">Liberado</span></div>
+ <div class="compact">${ic('bolt')}<b>Lote 2 · surpresa</b><span>5 placas de vídeo · 60% OFF</span><span class="chip ${{'Em breve':'soon','Liberada':'live','Esgotada':'out','Encerrada':'end'}[lote2]}" style="flex:none;margin:0">${lote2==='Em breve'?'Em breve':lote2}</span></div>
+ ${u?`<button class="btn ${u.present?'sec2':'out'}" onclick="presence()" ${u.present?'disabled':''}>${u.present?'Presença marcada ✓':'Estou no shopping'}</button><div class="note">${tagS} Marque e receba o aviso do lote surpresa</div>`:''}
+ <div class="sec"><h2>Ofertas da campanha</h2></div>${state.offers.filter(o=>o.campaign).map(o=>offerRow(o)).join('')}`}}
+function sOffers(){const order={Liberada:0,'Em breve':1,Esgotada:2,Encerrada:3};const l=a=>[...a].sort((x,y)=>order[status(x)]-order[status(y)]).map(o=>offerRow(o)).join('')||'<div class="note" style="text-align:left">Nenhuma oferta.</div>';
+ return{title:'Ofertas',body:`<div class="sec" style="margin-top:0"><h2>Campanha 11/11</h2></div>${l(state.offers.filter(o=>o.campaign))}<div class="sec"><h2>Ofertas relâmpago</h2></div>${l(flashes())}`}}
+function presence(){if(!user())return needLogin('presence');state.users[current].present=true;toast('Simulação · Presença marcada. Avisaremos quando o lote abrir.');render()}
+
+function sDetail(){const o=offerOf(selected),u=user(),s=status(o),claimed=u&&hasCoupon(current,o.id),fp_=finalPrice(o);
+ const alts=state.offers.filter(x=>x.id!==o.id&&status(x)==='Liberada');
+ let state_=`<div class="compact" style="margin-top:14px">${ic('bolt','')}<b>${s==='Liberada'?'Liberada agora':s==='Em breve'?'Em breve':s}</b><span></span>${s==='Liberada'?`<span class="chip a" style="margin:0;font-size:14px;flex:none">${clk(o.end)}</span>`:''}</div>`;
+ const pct=o.total?Math.round(o.stock/o.total*100):0;
+ let bar=s==='Em breve'?'':`<div style="padding:12px 0 4px;flex:none"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>${o.stock} de ${o.total} restantes</span><span style="color:var(--muted)">${pct}%</span></div><div class="bar-p"><i style="width:${pct}%"></i></div></div>`;
+ let extra='',cta='';
+ if(s==='Em breve'){extra=`<div class="warn">${ic('pin')}Lote surpresa: o horário não é divulgado${tagS}</div>`;cta=`<button class="btn" disabled>Em breve</button>${u?`<button class="btn out" onclick="presence()" ${u.present?'disabled':''}>${u.present?'Presença marcada ✓ · você será avisado':'Estou no shopping · receber aviso'}</button>`:`<button class="btn out" onclick="needLogin('presence','detail')">Criar conta para receber o aviso</button>`}`}
+ else if(s==='Liberada'){extra=u&&u.present?`<div class="warn">${ic('pin')}Você está no shopping${tagS}</div>`:'';cta=claimed?`<button class="btn sec2" onclick="go('coupons')">Cupom resgatado · ver em Meus cupons</button>`:`<button class="btn" onclick="claimTap('${o.id}')">Resgatar cupom</button><div class="note">1 cupom por pessoa${u?'':' · exige conta'}</div>`}
+ else{extra=`<div class="msg info">${s==='Esgotada'?'Esta oferta esgotou.':'Esta oferta foi encerrada.'} ${alts.length?'Veja alternativas de outras lojas abaixo.':''}</div>${claimed?`<button class="btn sec2" onclick="go('coupons')">Seu cupom está em Meus cupons</button>`:''}`}
+ const altsHtml=(s==='Esgotada'||s==='Encerrada')&&alts.length?`<div class="sec"><h2>Alternativas</h2></div>${alts.map(a=>offerRow(a)).join('')}`:'';
+ return{title:'Oferta',body:`<div class="photo ${o.icon==='gpu'?'':'gold'}">${ic(o.icon)}</div><div class="h2x">${esc(o.title)} · ${o.discount}% OFF</div><div class="sub">${esc(o.store)}${o.floor?' · '+esc(o.floor):''}${o.campaign?' · Campanha 11/11':' · Oferta relâmpago'}</div>
+ ${fp_?`<div class="price"><s>de ${money(o.orig)}</s><span style="font-size:14px;color:var(--muted)">por</span><b>${money(fp_)}</b></div><div class="note" style="text-align:left">${tagV} Preço ilustrativo</div>`:''}
+ ${state_}${bar}${extra}${cta}${altsHtml}`}}
+function claimTap(id){if(!user())return needLogin('claim','detail');const c=doClaim(current,id);if(!c){toast('A oferta ficou indisponível. Veja as alternativas.');render();return}go('claimed')}
+function sClaimed(){const c=user().coupons.filter(x=>x.offer===selected).slice(-1)[0];
+ return{title:'Cupom resgatado',body:`<div style="text-align:center;padding:20px 0 8px;color:var(--green);flex:none"><svg class="ic" style="width:64px;height:64px"><use href="#check"/></svg></div><div class="h2x" style="text-align:center;margin-top:0">Cupom garantido!</div><div class="note">${c?esc(c.title):''}</div>
+ <div class="code sm" style="margin-top:16px"><b>${c?c.id:''}</b><div>Mostre este código no caixa · válido por ${c?clk(c.end):''}</div></div>
+ <div class="note">${tagS} Uso no caixa simulado</div>
+ <button class="btn" onclick="go('coupons')">Ver em Meus cupons</button><button class="btn out" onclick="go('purchase')">Comprovar compra</button>`}}
+function sCoupons(){const u=user(),act=u.coupons.filter(c=>!c.used&&c.end>Date.now()),old=u.coupons.filter(c=>c.used||c.end<=Date.now());
+ const row=(c,on)=>`<div class="card" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;gap:10px;align-items:center"><div class="ico">${ic('coupon')}</div><div style="flex:1"><b>${esc(c.title)}</b><small>${esc(c.store)}</small></div>${c.sim?tagS:''}</div>${on?`<div class="code sm" style="margin:0"><b>${c.id}</b><div>Válido por ${clk(c.end)}</div></div><button class="btn out" style="margin-top:0" onclick="useCoupon('${c.id}')">Simular uso no caixa</button>`:`<small>${c.used?'Usado':'Vencido'} · ${c.id}</small>`}</div>`;
+ return{title:'Meus cupons',body:`<div class="sec" style="margin-top:0"><h2>Ativos (${act.length})</h2></div>${act.map(c=>row(c,1)).join('')||'<div class="note" style="text-align:left">Seus cupons aparecem aqui após o resgate.</div>'}<div class="sec"><h2>Usados e vencidos</h2></div>${old.map(c=>row(c,0)).join('')||'<div class="note" style="text-align:left">Nenhum ainda.</div>'}`}}
+function useCoupon(id){const c=user().coupons.find(x=>x.id===id);if(c)c.used=true;toast('Simulação · Cupom usado no caixa.');render()}
+
+function sPurchase(){const u=user(),c=lastCode(current),r=state.results[current];let top;
+ if(c&&!c.used&&c.end>Date.now())top=`<div class="code"><b>${fmtCode(c.code)}</b><div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap"><svg class="ic" style="width:18px;height:18px;color:var(--accent)"><use href="#clock"/></svg>Válido por ${clk(c.end)} ${tagV}</div></div><p style="font-size:15px;line-height:1.5;margin-top:16px;flex:none">Informe este código no caixa. O lojista confirma o valor e seus pontos caem na hora. Uso único.</p><button class="btn out" onclick="expireCode()">Simular vencimento (demonstração)</button>`;
+ else if(c&&!c.used)top=`<div class="msg err">Seu código venceu. Gere um novo.</div><button class="btn" onclick="genCode()">Gerar novo código</button>`;
+ else if(r){const t=nextTarget(u.points);top=`<div class="msg ok"><b>Compra confirmada · ${esc(r.store)}</b><br>${money(r.value)} · +${f1(r.pts)} pontos${r.bonus?' · +100 de bônus de indicação':''}<br>Saldo: ${f1(u.points)} pontos · ${t?`faltam ${f1(t.cost-u.points)} para ${t.title}`:'você já pode trocar por uma recompensa'}</div><button class="btn" onclick="go('points')">Ver meus pontos</button><button class="btn out" onclick="genCode()">Gerar novo código</button>`}
+ else top=`<div class="code"><b style="color:#bbb">••• •••</b><div>Gere um código para informar no caixa ${tagV}</div></div><button class="btn" onclick="genCode()">Gerar código</button><div class="note">6 dígitos · uso único · válido por 10 minutos</div>`;
+ return{title:'Comprovar compra',body:`${top}<div class="sec" style="margin-top:24px"><h2>Compras e pontos</h2></div>${hist_rows(u)}`}}
+function genCode(){newCode(current);render()}
+function expireCode(){const c=lastCode(current);if(c)c.end=Date.now()-1;render()}
+
+function sPoints(){const u=user(),t=nextTarget(u.points),prog=t?Math.min(100,Math.round(u.points/t.cost*100)):100;
+ const hd=`<div class="hd" id="hd" style="padding-top:0"><div class="hdbar"><button aria-label="Voltar" onclick="back()">${ic('back')}</button><h1>Meus pontos</h1><span></span></div><div class="bal">${ic('coin')}<b>${f1(u.points)}</b></div><div class="exp">1 ponto a cada R$ 10 ${tagV}</div><button class="hbtn" onclick="$('extrato').scrollIntoView({behavior:'smooth'})">Histórico</button></div>`;
+ const rw=REWARDS.map(r=>{const done=u.rewards.includes(r.id),can=u.points>=r.cost&&!done;return`<div class="rw" onclick="rewardTap('${r.id}')" style="${can?'':'opacity:.7'}"><div class="logo ${r.c}">${ic(r.icon)}</div><div class="m"><b>${r.title} ${r.sim?tagS:''}</b><small>${done?'Limite atingido (1 por tipo)':can?r.sub:`Faltam ${f1(r.cost-u.points)} pontos`}</small></div><span class="pts">${ic('coin')}${r.cost.toLocaleString('pt-BR')}</span></div>`}).join('');
+ const body=`<div class="over"><b>${t?`Faltam ${f1(t.cost-u.points)} para ${t.title}`:'Você pode trocar por qualquer recompensa'}</b><div class="bar-p"><i style="width:${prog}%"></i></div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px"><span>${f1(u.points)}</span><span>${t?t.cost.toLocaleString('pt-BR'):''}</span></div></div>
+ <div class="pad" style="padding-top:0;flex:none"><div class="sec"><h2>Troque seus pontos</h2>${tagV}</div>${rw}
+ <div class="sec"><h2>Ganhe mais pontos</h2></div>
+ <div class="rw" onclick="go('purchase')"><div class="logo c-brown">${ic('receipt')}</div><div class="m"><b>Comprovar compra</b><small>Informe o código no caixa</small></div></div>
+ <div class="rw" onclick="go('referral')"><div class="logo c-green">${ic('share')}</div><div class="m"><b>Indicar amigos</b><small>+100 pontos cada lado ${tagV}</small></div></div>
+ <div class="sec" id="extrato"><h2>Extrato</h2></div>${hist_rows(u)}</div>`;
+ return{cls:'ptsx',hd,body}}
+function rewardTap(id){const u=user(),r=REWARDS.find(x=>x.id===id);if(u.rewards.includes(id)){toast('Limite de 1 resgate por tipo atingido.');return}if(u.points<r.cost){toast(`Faltam ${f1(r.cost-u.points)} pontos para esta troca.`);return}rewardSel=id;go('exchange')}
+function sExchange(){const u=user(),r=REWARDS.find(x=>x.id===rewardSel);
+ return{title:'Confirmar troca',body:`<div class="card" style="margin-top:0"><div class="ico">${ic(r.icon)}</div><div style="flex:1"><b>${r.title}</b><small>${r.sub}</small></div>${r.sim?tagS:''}</div>
+ <div class="compact"><b>Saldo atual</b><span style="text-align:right">${f1(u.points)} pts</span></div><div class="compact"><b>Custo</b><span style="text-align:right">${r.cost.toLocaleString('pt-BR')} pts</span></div><div class="compact"><b>Saldo após a troca</b><span style="text-align:right;color:var(--accent);font-weight:600">${f1(Math.max(0,u.points-r.cost))} pts</span></div>
+ <div class="note">${tagV} Limite de 1 resgate por tipo</div><button class="btn" onclick="redeemTap()" ${u.points<r.cost||u.rewards.includes(r.id)?'disabled':''}>Confirmar troca</button><button class="btn sec2" onclick="back()">Voltar</button>`}}
+function redeemTap(){if(!doRedeem(current,rewardSel)){toast('Saldo insuficiente ou limite atingido.');return}hist=['home'];screen='coupons';render();toast('Cupom disponível em Meus cupons.')}
+
+const CODES={bruno:'BRUNO100',ana:'ANA100'};
+function sReferral(){const u=user(),code=CODES[current];
+ const list=u.invited.map(i=>`<div class="li" style="min-height:52px"><div style="flex:1">${esc(i.name)}</div><span class="t ${i.done?'g':''}">${i.done?'+100 pontos':'aguardando 1ª compra'}</span></div>`).join('');
+ return{title:'Indicar amigos',body:`<div class="h2x" style="margin-top:0">Bom para você. Bom para quem vem.</div><p style="font-size:15px;line-height:1.5;margin-top:8px;flex:none">100 pontos para cada lado na primeira compra comprovada do indicado. ${tagV}</p>
+ <div class="code sm" style="margin-top:16px"><b>${code}</b><div>Seu código pessoal</div></div><button class="btn" onclick="shareRef()">Compartilhar código</button>
+ <div class="sec"><h2>Suas indicações</h2></div>${list||'<div class="note" style="text-align:left">Nenhuma indicação ainda.</div>'}
+ ${u.referrer?`<div class="msg info">Você entrou com o código de ${esc(people[u.referrer].name)}. ${u.bonus?'Bônus de 100 pontos creditado.':'O bônus de 100 pontos cai na sua primeira compra comprovada.'}</div>`:''}`}}
+function shareRef(){const t=`Venha ao Shopping Exemplo! Use meu código ${CODES[current]}`;try{navigator.clipboard&&navigator.clipboard.writeText(t)}catch(e){}toast('Simulação · Código copiado para compartilhar: '+CODES[current])}
+
+function sProfile(){const u=user(),p=people[current];
+ if(!u&&!isStaff())return{title:'Perfil',body:`<div class="msg info">Você está navegando sem conta.</div><button class="btn" onclick="needLogin('general','home')">Criar conta</button>`};
+ const staff=isStaff();
+ return{title:'Perfil',body:`<div class="card" style="margin-top:0"><div class="ico" style="border-radius:50%;font-weight:700;font-size:20px">${p.name[0]}</div><div style="flex:1"><b>${esc(p.name)}</b><small>${p.role}${u?` · ${f1(u.points)} pontos`:''}</small></div></div>
+ ${staff?'':`<div class="sec"><h2>Dados mínimos</h2></div><div class="compact"><b>Nome</b><span style="text-align:right">${esc(p.name)}</span></div><div class="compact"><b>E-mail</b><span style="text-align:right">${p.name.toLowerCase()}@exemplo.com</span></div>
+ <div class="sec"><h2>Consentimento</h2></div><div class="tog"><div><b>Receber ofertas e novidades</b><small>Marketing, separado do uso do app. Opcional.</small></div><button class="sw ${u.marketing?'on':''}" aria-label="Consentimento de marketing" onclick="toggleMkt()"></button></div>
+ <button class="btn out" onclick="installApp()">Instalar app (opcional)</button><div class="note">${tagS} O app funciona sem instalar</div>`}
+ <button class="btn sec2" style="margin-top:24px" onclick="logout()">Sair</button>`}}
+function toggleMkt(){const u=user();u.marketing=!u.marketing;render()}
+function installApp(){toast('Simulação · No celular, o navegador oferece adicionar o app à tela inicial.')}
+function logout(){switchUser('guest')}
+
+function sSignup(){const r=signupCtx.reason,why={claim:'resgatar este cupom',presence:'marcar que está no shopping e receber avisos',points:'acumular e trocar pontos',purchase:'comprovar compras e pontuar',coupons:'guardar seus cupons',exchange:'trocar pontos',referral:'indicar amigos e ganhar bônus',general:'acumular pontos, resgatar ofertas e indicar amigos'}[r]||'continuar';
+ return{title:'Criar conta',body:`<div class="h2x" style="margin-top:0">Crie sua conta para ${why}.</div><p style="font-size:15px;line-height:1.5;margin-top:8px;flex:none;color:var(--muted)">Pedimos só o essencial. Você continua vendo ofertas sem conta.</p>
+ <div class="field"><label>Nome</label><input class="inp" placeholder="Seu nome" value="${esc(form.name)}" oninput="form.name=this.value"></div>
+ <div class="field"><label>E-mail</label><input class="inp" type="email" placeholder="voce@exemplo.com" value="${esc(form.email)}" oninput="form.email=this.value"></div>
+ <div class="field"><label>Código de indicação (opcional)</label><input class="inp" id="refin" placeholder="Ex.: BRUNO100" value="${esc(form.ref)}" oninput="form.ref=this.value"></div>
+ ${msg?`<div class="msg err" role="status">${esc(msg)}</div>`:''}
+ <button class="btn" onclick="signUp()">Criar conta</button><button class="btn sec2" onclick="back()">Agora não</button><div class="note">${tagS} A conta criada é a da Ana (protótipo). Dados fictícios.</div>`}}
+function signUp(){const code=form.ref.trim().toUpperCase();if(code&&code!=='BRUNO100'){msg='Código de indicação não encontrado. Na demonstração, use BRUNO100.';render();return}
+ const a=state.users.ana;if(code&&!a.referrer&&!a.history.length){a.referrer='bruno';if(!state.users.bruno.invited.some(i=>i.name==='Ana'))state.users.bruno.invited.push({name:'Ana',done:false})}
+ const ret=signupCtx.ret;current='ana';hist=[];screen='home';msg='';render();renderPanel();if(ret&&ret!=='signup'&&ret!=='home'){go(ret)}toast('Conta criada'+(code?' com o código de indicação de Bruno.':'.'))}
+
+/* lojista */
+function sMhome(){const own=state.offers.filter(o=>o.owner===current),act=own.filter(o=>['Liberada','Em breve'].includes(status(o))).length,res=own.reduce((s,o)=>s+o.total-o.stock,0),comp=state.purchases.filter(p=>p.store===current).length;
+ return{title:esc(people[current].name),back:false,right:`<button aria-label="Perfil" onclick="go('profile')">${ic('user')}</button>`,body:`<div style="color:var(--muted);font-size:13px;flex:none">Área do lojista</div>
+ <div class="two" style="margin-top:12px">${tile(act,'Ofertas ativas')}${tile(res,'Cupons resgatados')}</div><div class="two" style="margin-top:12px">${tile(comp,'Compras confirmadas')}${tile(own.length,'Ofertas publicadas')}</div>
+ <button class="btn" onclick="go('create')">Criar oferta relâmpago</button><button class="btn out" onclick="go('confirm')">Confirmar compra</button>
+ <div class="sec"><h2>Minhas ofertas</h2></div>${own.map(o=>offerRow(o,`openTrack('${o.id}')`)).join('')||'<div class="note" style="text-align:left">Nenhuma oferta ainda.</div>'}`}}
+function prevHtml(){const q=Number(form.qty)||0,d=Number(form.disc)||0,dur=Number(form.dur)||0;return`<div class="offer" style="cursor:default"><div class="logo">${ic('bolt')}</div><div><b>${esc(form.prod||'Produto')} · ${d}% OFF</b><div class="s">${esc(people[current].name)}</div><span class="chip live">Liberada</span><span class="chip a">Termina em ${dur>=3600?dur/3600+' h':dur>=60?dur/60+' min':dur+' s'}</span><span class="chip">${q} restantes</span></div></div>`}
+function upd(k,v){form[k]=v;const p=$('prev');if(p)p.innerHTML=prevHtml()}
+function sCreate(){const durs=[[60,'1 minuto (demonstração)'],[180,'3 minutos'],[600,'10 minutos'],[3600,'1 hora']],discs=[10,20,30,40,50,60];
+ return{title:'Nova oferta',body:`<div style="font-size:13px;color:var(--muted);flex:none">${esc(people[current].name)}</div>
+ <div class="field" style="margin-top:8px"><label>Produto</label><input class="inp" maxlength="60" value="${esc(form.prod)}" oninput="upd('prod',this.value)"></div>
+ <div class="field"><label>Desconto</label><select class="inp" onchange="upd('disc',this.value)">${discs.map(d=>`<option value="${d}" ${Number(form.disc)===d?'selected':''}>${d}%</option>`).join('')}</select></div>
+ <div class="two"><div class="field"><label>Duração</label><select class="inp" onchange="upd('dur',this.value)">${durs.map(([v,l])=>`<option value="${v}" ${Number(form.dur)===v?'selected':''}>${l}</option>`).join('')}</select></div><div class="field"><label>Quantidade</label><input class="inp" type="number" min="1" max="1000" value="${esc(form.qty)}" oninput="upd('qty',this.value)"></div></div>
+ <div class="sec" style="margin-top:20px"><h2>Prévia</h2></div><div class="pv" id="prev">${prevHtml()}</div>
+ ${msg?`<div class="msg err">${esc(msg)}</div>`:''}<button class="btn" style="margin-top:22px" onclick="publishTap()">Publicar oferta</button><div class="note">Leva menos de 1 minuto</div>`}}
+function publishTap(){const o=doPublish();if(!o){msg='Informe produto, quantidade de 1 a 1.000 e desconto válido.';render();return}sel=o.id;hist=[];screen='track';msg='';render();toast('Oferta publicada. Os visitantes já podem resgatar.')}
+function sTrack(){const o=offerOf(sel)||state.offers.find(x=>x.owner===current),s=status(o),pct=o.total?Math.round(o.stock/o.total*100):0;
+ return{title:'Acompanhar oferta',body:`<div class="h2x" style="margin-top:0">${esc(o.title)} · ${o.discount}% OFF</div><div class="sub">${esc(o.store)}${o.campaign?' · Campanha 11/11':''}</div><div style="flex:none">${chipFor(o)}</div>
+ <div class="two" style="margin-top:14px">${tile(o.total-o.stock,'Cupons resgatados')}${tile(o.stock,'Restantes')}</div>
+ <div style="padding:14px 0 4px;flex:none"><div class="bar-p"><i style="width:${pct}%"></i></div></div>
+ <div class="compact">${ic('clock')}<b>${s==='Liberada'?'Termina em':s==='Em breve'?'Aguardando o lote surpresa':'Situação'}</b><span style="text-align:right">${s==='Liberada'?clk(o.end):s}</span></div>
+ ${o.campaign&&s==='Em breve'?'<div class="msg info">Este lote é liberado pelo Shopping, em horário surpresa.</div>':''}
+ <div class="note" style="text-align:left">A oferta encerra ao expirar ou esgotar.</div>
+ <button class="btn out" onclick="closeOffer('${o.id}')" ${s==='Encerrada'||s==='Esgotada'?'disabled':''}>Encerrar antes do prazo</button><button class="btn sec2" onclick="go('confirm')">Confirmar compra</button>`}}
+function closeOffer(id){offerOf(id).closed=true;render();toast('Oferta encerrada para todos os perfis.')}
+function sConfirm(){const r=form.res;
+ return{title:'Confirmar compra',body:`<p style="font-size:15px;line-height:1.5;flex:none">Digite o código que o cliente mostra e o valor da compra. ${tagV}</p>
+ <div class="field"><label>Código do cliente (6 dígitos)</label><input class="inp" inputmode="numeric" maxlength="7" placeholder="000 000" value="${esc(form.code)}" oninput="form.code=this.value"></div>
+ <div class="field"><label>Valor da compra (R$)</label><input class="inp" type="number" min="0.01" step="0.01" placeholder="150,00" value="${esc(form.value)}" oninput="form.value=this.value"></div>
+ <button class="btn" onclick="confirmTap()">Confirmar compra</button>
+ ${r?`<div class="msg ${r.ok?'ok':'err'}" role="status">${esc(r.msg)}</div>`:`<div class="msg info">Aguardando o código do visitante.</div>`}
+ <div class="note">1 ponto a cada R$ 10 · código de uso único, válido por 10 minutos</div>`}}
+function confirmTap(){form.res=doConfirm(form.code,Number(form.value),current);if(form.res.ok){form.code='';form.value=''}render()}
+
+/* shopping */
+function sShome(){const g=offerOf('gpu'),s=status(g),claims=state.offers.reduce((a,o)=>a+o.total-o.stock,0),pts=state.purchases.reduce((a,p)=>a+p.points,0)+320,pres=Object.values(state.users).filter(u=>u.present).length+18;
+ return{title:'Painel da campanha',back:false,right:`<button aria-label="Perfil" onclick="go('profile')">${ic('user')}</button>`,body:`<div class="banner"><span style="font-size:12px;font-weight:600;letter-spacing:.6px">SHOPPING EXEMPLO</span><b>Campanha 11/11 · em andamento</b><span style="font-size:13px">Termina em ${clk(state.campEnd)}</span></div>
+ <button class="btn" onclick="releaseTap()" ${s!=='Em breve'?'disabled':''}>Liberar lote agora</button>
+ <div class="note">${s==='Em breve'?'Lote 2 (5 placas de vídeo) ainda não liberado':s==='Liberada'?'Lote 2 liberado · encerra em ':'Lote 2: '+s}${s==='Liberada'?clk(g.end):''}</div>
+ <div class="sec"><h2>Lotes programados</h2></div>
+ <div class="compact">${ic('clock')}<b>Lote 1 · 10h</b><span>Livraria Folha e Moda Sol</span><span class="chip live" style="flex:none;margin:0">Liberado</span></div>
+ <div class="compact">${ic('bolt')}<b>Lote 2 · surpresa</b><span>5 placas · TechPlay</span>${chipFor(g).replace('class="chip','style="flex:none;margin:0" class="chip')}</div>
+ <div class="sec"><h2>Números agregados</h2></div><div class="two">${tile(claims,'Cupons resgatados')}${tile(state.purchases.length+3,'Compras comprovadas')}</div><div class="two" style="margin-top:12px">${tile(f1(pts),'Pontos gerados')}${tile(pres,'Marcaram "Estou no shopping"')}</div>
+ <div class="note" style="text-align:left">Só números agregados, sem dados de pessoas. Inclui histórico inicial de demonstração.</div>
+ <div class="rowsc" style="padding:12px 0 0">${sc('camp','Campanhas',"go('shcamps')")}${sc('bolt','Relâmpago',"go('shflash')")}</div>`}}
+function releaseTap(){if(doRelease())toast('Simulação · Lote liberado. Visitantes que marcaram presença foram avisados.');render()}
+function sShcamps(){const c=(t,s,d,cls)=>`<div class="card" style="flex-direction:column;align-items:stretch;gap:4px"><div style="display:flex;justify-content:space-between;align-items:center"><b>${t}</b><span class="chip ${cls}" style="margin:0">${s}</span></div><small>${d}</small></div>`;
+ return{title:'Campanhas',body:`${c('10/10 · Passada','Encerrada','Resultado de demonstração: 41 cupons resgatados, 29 compras comprovadas.','end')}${c('11/11 · Atual','Em andamento','Lotes: 10h (liberado) e surpresa (placas de vídeo).','live')}${c('12/12 · Próxima','Em preparação','Lotes e ofertas a definir com as lojas.','soon')}<div class="note" style="text-align:left;margin-top:14px">Criar campanha fica fora do protótipo.</div>`}}
+function sShflash(){return{title:'Ofertas relâmpago',body:`<div class="sec" style="margin-top:0"><h2>Das lojas</h2></div>${flashes().map(o=>offerRow(o,`openTrack('${o.id}')`)).join('')}<div class="note" style="text-align:left;margin-top:12px">Publicadas pelas próprias lojas, fora das campanhas.</div>`}}
+
+const SCREENS={home:sHome,campaigns:sCampaigns,offers:sOffers,detail:sDetail,claimed:sClaimed,coupons:sCoupons,purchase:sPurchase,points:sPoints,exchange:sExchange,referral:sReferral,profile:sProfile,signup:sSignup,mhome:sMhome,create:sCreate,track:sTrack,confirm:sConfirm,shome:sShome,shcamps:sShcamps,shflash:sShflash};
+
+/* ---------- render ---------- */
+const STATUS=()=>`<div class="status"><span class="tm">${hhmm()}</span><span class="r"><svg width="16" height="11" viewBox="0 0 16 11"><path d="M0 8h3v3H0zm4-3h3v6H4zm4-3h3v9H8zm4-2h3v11h-3z" fill="currentColor"/></svg><span class="bat"></span></span></div>`;
+function frame(s){
+ if(s.cls==='home')return STATUS()+`<div class="bar"><button aria-label="Menu" onclick="menuTap()">${ic('menu')}</button><h1 class="brand"><img src="${LOGO}" alt="Shopping Exemplo"></h1><button aria-label="Buscar" onclick="soon()">${ic('search')}</button></div><div class="scroll n" id="sc">${s.body}</div>`;
+ if(s.cls==='ptsx')return STATUS()+s.hd+`<div class="scroll" id="sc" style="padding:0 0 16px">${s.body}</div>`;
+ const left=s.back===false?'<span></span>':`<button aria-label="Voltar" onclick="back()">${ic('back')}</button>`;
+ return STATUS()+`<div class="bar">${left}<h1>${s.title}</h1>${s.right||'<span></span>'}</div><div class="scroll" id="sc">${s.body}</div>`}
+function render(keep){
+ const old=$('sc'),y=keep&&old?old.scrollTop:0;
+ if(!SCREENS[screen])screen=homeOf();
+ const s=SCREENS[screen]();const ph=$('phone');
+ ph.className='phone '+(s.cls||'');
+ ph.innerHTML=frame(s)+'<div class="toast" id="toast" onclick="toastTap()"></div>';
+ const sc_=$('sc');if(sc_&&y)sc_.scrollTop=y;
+ if(s.cls==='home'){initCar();const st=ph.querySelector('.status'),br=ph.querySelector('.bar'),on=()=>{const o=sc_.scrollTop>8;st.classList.toggle('solid',o);br.classList.toggle('solid',o)};sc_.addEventListener('scroll',on);on()}
+ if(s.cls==='ptsx')ph.style.setProperty('--toph',($('hd').getBoundingClientRect().bottom-ph.getBoundingClientRect().top)+'px');
+ fp=fingerprint()}
+function toastTap(){const t=toastGo;$('toast').classList.remove('show');if(t)openOffer(t)}
+const fingerprint=()=>state.offers.map(o=>status(o)).join('|')+'|'+(user()?user().coupons.filter(c=>c.end>Date.now()&&!c.used).length:'')+'|'+state.notices.length;
+function initCar(){const c=$('car'),t=c.querySelector('.track'),n=3,dots=[...c.querySelectorAll('.dots button')];let x0=null,dx=0;
+ const W=()=>c.clientWidth;
+ function g(k,anim=true){carI=(k+n)%n;t.style.transition=anim?'transform .45s ease':'none';t.style.transform=`translateX(${-carI*W()}px)`;dots.forEach((d,j)=>d.classList.toggle('on',j===carI))}
+ function start(){clearInterval(carT);carT=setInterval(()=>{if($('car')===c)g(carI+1);else clearInterval(carT)},4500)}
+ dots.forEach((d,j)=>d.addEventListener('click',()=>{g(j);start()}));
+ c.addEventListener('pointerdown',e=>{x0=e.clientX;dx=0;carMoved=false;clearInterval(carT);t.style.transition='none'});
+ const mv=e=>{if(x0===null)return;dx=e.clientX-x0;t.style.transform=`translateX(${-carI*W()+dx}px)`};
+ const up=()=>{if(x0===null)return;x0=null;carMoved=Math.abs(dx)>6;if(dx<-40)g(carI+1);else if(dx>40)g(carI-1);else g(carI);start();setTimeout(()=>carMoved=false,50)};
+ window.addEventListener('pointermove',mv);window.addEventListener('pointerup',up);
+ g(carI,false);start()}
+
+/* ---------- painel de demonstração ---------- */
+const MNAMES=null;
+function ensureClaim(uid,oid){if(!hasCoupon(uid,oid))doClaim(uid,oid)}
+function ensureCode(uid){return activeCode(uid)||newCode(uid)}
+function ensureConfirm(uid,val,store){const c=activeCode(uid);if(c)doConfirm(c.code,Number(form.value)||val,store)}
+function ensureRelease(){doRelease()}
+function ensurePresence(uid){state.users[uid].present=true}
+function prefillConfirm(uid,val){form.code=fmtCode(ensureCode(uid).code);form.value=String(val);form.res=null}
+function latestFlash(owner){return[...state.offers].reverse().find(o=>o.owner===owner&&!o.campaign&&o.id.startsWith('f'))}
+function sellOut(){const g=offerOf('gpu');if(g.stock>0&&status(g)==='Liberada'){g.stock=0;toast('Simulação · Outros visitantes resgataram as 5 placas.')}}
+function ensureBalance(uid,min){const u=state.users[uid];if(u.points<min){u.history.unshift({title:'Ajuste de demonstração (compra simulada)',points:min-u.points});u.points=min}}
+function ensureSignupRef(){const a=state.users.ana;if(!a.referrer&&!a.history.length){a.referrer='bruno';if(!state.users.bruno.invited.some(i=>i.name==='Ana'))state.users.bruno.invited.push({name:'Ana',done:false})}}
+function ensurePublish(){if(!latestFlash('tech')){current='tech';Object.assign(form,{prod:'Fone Bluetooth',disc:30,dur:60,qty:2});const o=doPublish();if(o)sel=o.id}}
+
+const J=[
+{t:'Convidado descobre a campanha 11/11 e cria conta com código de indicação',steps:[
+ {u:'guest',s:'home',x:'Convidado vê a campanha 11/11, a oferta relâmpago e como funcionam pontos e indicação.'},
+ {u:'guest',s:'detail',o:'gpu',x:'Abre a oferta das placas: pode ver, mas não resgata. Ao tentar receber o aviso ou resgatar, vem o convite para criar conta.'},
+ {u:'guest',s:'signup',act:()=>{signupCtx={reason:'claim',ret:'detail'};form.ref='BRUNO100'},x:'Convite para criar conta, com o código BRUNO100 preenchido. Toque em "Criar conta".'},
+ {u:'ana',s:'home',pre:ensureSignupRef,x:'Ana entra com a indicação de Bruno registrada. O bônus vem na primeira compra.'}]},
+{t:'Dia da campanha: marca presença, recebe o aviso do lote, resgata e compra',steps:[
+ {u:'ana',s:'home',x:'Ana abre o app e toca em "Estou no shopping" (Simulação).'},
+ {u:'admin',s:'shome',pre:()=>ensurePresence('ana'),x:'O Shopping toca em "Liberar lote agora" (lote surpresa das placas).'},
+ {u:'ana',s:'home',pre:ensureRelease,x:'Ana recebe o aviso do lote liberado (Simulação) e vê o card na tela inicial.'},
+ {u:'ana',s:'detail',o:'gpu',x:'Detalhe com contagem e estoque. Toque em "Resgatar cupom".'},
+ {u:'ana',s:'coupons',pre:()=>ensureClaim('ana','gpu'),x:'O cupom das placas está em Meus cupons, com o código para o caixa.'},
+ {u:'ana',s:'purchase',x:'Ana compra e toca em "Gerar código" para comprovar.'},
+ {u:'tech',s:'confirm',act:()=>prefillConfirm('ana',999),x:'TechPlay confirma com código e valor (R$ 999,00).'},
+ {u:'ana',s:'points',pre:()=>ensureConfirm('ana',999,'tech'),x:'Ana vê os pontos creditados e quanto falta para a recompensa.'}]},
+{t:'Visitante chega tarde: oferta esgotada, alternativas e novo resgate',steps:[
+ {u:'admin',s:'shome',x:'O Shopping libera o lote das placas ("Liberar lote agora").'},
+ {u:'ana',s:'home',pre:ensureRelease,act:sellOut,x:'Simulação: outros visitantes resgatam as 5 placas. Ana chega tarde.'},
+ {u:'ana',s:'detail',o:'gpu',x:'Oferta esgotada, com alternativas de outras lojas.'},
+ {u:'ana',s:'detail',o:'livro',x:'Ana escolhe a alternativa da Livraria Folha e toca em "Resgatar cupom".'},
+ {u:'ana',s:'coupons',pre:()=>ensureClaim('ana','livro'),x:'O cupom da alternativa está em Meus cupons.'}]},
+{t:'Compra comprovada: código, confirmação do lojista e pontos',steps:[
+ {u:'bruno',s:'purchase',x:'Bruno toca em "Gerar código" (6 dígitos, uso único, 10 min).'},
+ {u:'tech',s:'confirm',act:()=>prefillConfirm('bruno',150),x:'TechPlay digita código e valor (R$ 150,00) e confirma. Teste também código errado ou usado.'},
+ {u:'bruno',s:'points',pre:()=>ensureConfirm('bruno',150,'tech'),x:'Bruno vê os pontos ganhos e quanto falta para a próxima recompensa.'}]},
+{t:'Troca de pontos por estacionamento',steps:[
+ {u:'bruno',s:'points',act:()=>ensureBalance('bruno',500),x:'Bruno tem 500 pontos (ajuste de demonstração) e toca em "Estacionamento 2 h".'},
+ {u:'bruno',s:'exchange',act:()=>{rewardSel='park'},x:'Tela de confirmação da troca (Simulação). Toque em "Confirmar troca".'},
+ {u:'bruno',s:'coupons',pre:()=>doRedeem('bruno','park'),x:'O cupom de estacionamento aparece em Meus cupons.'}]},
+{t:'Indicação: Bruno indica, Ana cria conta, compra e os dois ganham',steps:[
+ {u:'bruno',s:'referral',x:'Bruno vê o código BRUNO100 e toca em "Compartilhar código".'},
+ {u:'guest',s:'signup',act:()=>{signupCtx={reason:'general',ret:'home'};form.ref='BRUNO100'},x:'Ana abre o convite e cria conta com o código de Bruno. Toque em "Criar conta".'},
+ {u:'ana',s:'purchase',pre:ensureSignupRef,x:'Ana faz a primeira compra e toca em "Gerar código".'},
+ {u:'tech',s:'confirm',act:()=>prefillConfirm('ana',200),x:'TechPlay confirma a compra (R$ 200,00).'},
+ {u:'ana',s:'points',pre:()=>ensureConfirm('ana',200,'tech'),x:'Ana recebe os pontos da compra e o bônus de 100 pontos.'},
+ {u:'bruno',s:'referral',x:'Bruno vê a indicação concluída e o bônus de 100 pontos.'}]},
+{t:'Oferta relâmpago: lojista cria, visitante vê a contagem, encerra ao esgotar ou expirar',steps:[
+ {u:'tech',s:'create',act:()=>Object.assign(form,{prod:'Fone Bluetooth',disc:30,dur:60,qty:2}),x:'TechPlay cria a oferta (prévia ao vivo) e toca em "Publicar oferta".'},
+ {u:'ana',s:'home',pre:ensurePublish,x:'Ana vê a oferta relâmpago no carrossel (2º slide) e em Ofertas, com contagem.'},
+ {u:'ana',s:'detail',o:()=>latestFlash('tech').id,x:'Detalhe com contagem e restantes. Toque em "Resgatar cupom".'},
+ {u:'bruno',s:'detail',o:()=>latestFlash('tech').id,pre:()=>ensureClaim('ana',latestFlash('tech').id),x:'Bruno resgata a última unidade. Ao zerar, a oferta esgota.'},
+ {u:'tech',s:'track',o:()=>latestFlash('tech').id,pre:()=>ensureClaim('bruno',latestFlash('tech').id),x:'TechPlay acompanha: esgotada. Sem estoque, ela também encerra ao expirar (1 min).'}]},
+{t:'Shopping libera um lote na hora e o visitante vê o lote liberado',steps:[
+ {u:'ana',s:'home',x:'Ana toca em "Estou no shopping" (Simulação).'},
+ {u:'admin',s:'shome',pre:()=>ensurePresence('ana'),x:'O Shopping toca em "Liberar lote agora".'},
+ {u:'ana',s:'home',pre:ensureRelease,x:'Ana recebe o aviso e o card "Lote liberado agora".'},
+ {u:'ana',s:'detail',o:'gpu',x:'Detalhe do lote liberado: 5 placas, contagem de 5 minutos.'}]}];
+
+function runStep(j,i){const st=J[j].steps[i];jIdx=j;if(st.pre)st.pre();
+ if(st.o)selected=typeof st.o==='function'?st.o():st.o;
+ current=st.u;hist=[];if(st.s==='track')sel=selected;if(st.act)st.act();
+ screen=st.s;msg='';jStep=i;render();renderPanel();checkNotices()}
+function startJourney(j){state=initial();form={code:'',value:'',prod:'Café expresso',disc:20,dur:180,qty:5,ref:'',name:'',email:''};selected='gpu';sel=null;rewardSel='d10';jIdx=j;jStep=-1;current='guest';screen='home';hist=[];render();renderPanel()}
+function nextStep(){if(jIdx<0)return;if(jStep+1<J[jIdx].steps.length)runStep(jIdx,jStep+1)}
+function resetDemo(){state=initial();form={code:'',value:'',prod:'Café expresso',disc:20,dur:180,qty:5,ref:'',name:'',email:''};selected='gpu';sel=null;jIdx=-1;jStep=-1;current='guest';panelRole='Não logado';hist=[];screen='home';render();renderPanel()}
+function pickRole(r){renderPanel(r)}
+function renderPanel(r){
+ panelRole=r||people[current].role;
+ const users=Object.entries(people).filter(([id,p])=>p.role===panelRole);
+ let h=`<h3>Perfil</h3><div class="pb">${ROLES.map(r=>`<button class="pill ${r===panelRole?'on':''}" onclick="pickRole('${r}')">${r}</button>`).join('')}</div>`;
+ h+=users.map(([id,p])=>`<button class="usr ${id===current?'on':''}" onclick="switchUser('${id}')"><span><b>${p.name}</b> · ${USERDESC[id]}</span><span>${id===current?'✓':'→'}</span></button>`).join('');
+ h+=`<div class="who">Agora: <b>${people[current].name}</b> (${people[current].role})</div>`;
+ h+=`<h3>Jornadas</h3>`+J.map((j,i)=>`<button class="jb ${i===jIdx?'on':''}" onclick="startJourney(${i})"><b>J${i+1}</b> ${j.t}</button>`).join('');
+ if(jIdx>=0){const jj=J[jIdx],last=jStep>=jj.steps.length-1;
+  h+=`<ol>${jj.steps.map((s,i)=>`<li class="${i===jStep?'cur':i<jStep?'done':''}" onclick="runStep(${jIdx},${i})"><b>${i<jStep?'✓':i+1}</b><span>${s.x} <i style="color:var(--muted)">(${people[s.u].name})</i></span></li>`).join('')}</ol>`;
+  h+=`<button class="go" onclick="nextStep()" ${last?'disabled':''}>${jStep<0?'Começar':last?'Fim da jornada':'Próximo passo'}</button><small>Escolher uma jornada reinicia o estado. Clique num passo para ir direto a ele.</small>`}
+ h+=`<button class="rst" onclick="resetDemo()">Reiniciar demonstração</button>`;
+ h+=`<small>${tagS} = simulado. ${tagV} = regra ainda não decidida (1 ponto a cada R$ 10; recompensas desde 500; bônus de indicação 100 cada lado).</small>`;
+ $('panel').innerHTML=h}
+
+setInterval(()=>{
+ document.querySelectorAll('[data-end]').forEach(e=>e.textContent=rem(Number(e.dataset.end)));
+ const tm=document.querySelector('.tm');if(tm)tm.textContent=hhmm();
+ checkNotices();
+ const a=document.activeElement,typing=a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)&&$('phone').contains(a);
+ if(fingerprint()!==fp&&!typing)render(true)},1000);
+render();renderPanel();
+</script></body></html>
