@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| **Status** | Escopo do MVP revisado em 13/11/2026; protótipo em construção |
+| **Status** | MVP implementado (specs 001 a 007); versão online pendente; entrega em 14/11/2026 até 12h |
 | **Entrega** | Sábado, 14/11/2026, até as 12h: MVP funcional, repositório, documentação e instruções de execução, com o Easter Egg demonstrável |
 | **Prioridade** | [MoSCoW](https://www.agilebusiness.org/dsdm-project-framework/moscow-prioritisation.html): **Must** (núcleo do MVP), **Should** e **Could** (bônus, nessa ordem), **Won't** (fora desta entrega) |
 
@@ -76,7 +76,7 @@ Em aberto: priorizar visitantes novos ou ocasionais, ou recompensar os frequente
 | F03 | Saldo e troca de pontos por desconto | 2 | **Must** | Confirmado | Cupom gerado aparece em "Meus cupons" |
 | F23 | Estacionamento como resgate de pontos | 2 | **Must** | Confirmado | Trocar pontos por desconto ou isenção; limitar o resgate, porque estacionamento é receita do shopping |
 | F27 | Programa de indicação, com código por usuário, influenciador ou comunidade | 4 | **Must** | Confirmado; momento do bônus em aberto | Quem indica e quem é indicado ganham pontos de bônus (incorpora a antiga F21, bônus no cadastro); liberar na primeira compra comprovada reduz contas falsas |
-| F04 | Conta do usuário | Base | **Must** | Proposto; implícito no fluxo | Vincular saldo, resgates e indicações a um usuário; login simples ou simulado |
+| F04 | Conta do usuário | Base | **Must** | Confirmado (login simulado, D11) | Vincular saldo, resgates e indicações a um usuário; login simples ou simulado |
 | F07 | Votação entre opções fechadas, com resultado refletido na programação | 3 | Should | Confirmado como parte do pilar 3 | Um voto por usuário; só votar o que o shopping vai cumprir; risco de captura por grupos organizados |
 | F09 | Eventos escolhidos com participação das comunidades, com eventual brinde | 3 | Should | Confirmado como parte do pilar 3 | Depende da operação do shopping |
 | F30 | Encontros em datas marcantes, como finais de campeonato e festividades, com brindes durante o evento | 3 | Should | Proposto | Efeito acaba com o evento; bebida alcoólica exige controle de idade e opção sem álcool; brinde condicionado a compra com estoque limitado pode exigir autorização federal |
@@ -91,7 +91,7 @@ Em aberto: priorizar visitantes novos ou ocasionais, ou recompensar os frequente
 | F24 | Pontos extras na primeira compra em uma loja nova | 2 | Could | Proposto | Possibilidade futura; depende de a loja querer |
 | F12 | Ranking de clientes com benefícios | 2 | Could | Proposto | Diferenciar de níveis |
 | F10 | Relato de incidentes com recompensa | Operação | Could | Proposto | Exige evidências e moderação (D04) |
-| F13, F20, F22, F26, F28, W01, W02 | Pontos por interação social; consolação para quem não conseguiu a oferta; cupons cumulativos; ofertas em serviços dentro do shopping; canal pelo WhatsApp; opiniões, perguntas frequentes e NPS; pontos por feedback | — | Won't | Descartados em 13/11 | — |
+| F13, F20, F22, F26, F28, W01, W02 | Pontos por interação social; consolação para quem não conseguiu a oferta; cupons cumulativos; ofertas em serviços dentro do shopping; canal pelo WhatsApp; opiniões, perguntas frequentes e NPS; pontos por feedback | n/a | Won't | Descartados em 13/11 | n/a |
 
 **Em aberto, sem prioridade definida:**
 
@@ -105,7 +105,7 @@ Em aberto: priorizar visitantes novos ou ocasionais, ou recompensar os frequente
 
 | ID | Requisito | MoSCoW | Status |
 |---|---|---|---|
-| RNF01 | Qualquer pessoa consegue instalar e executar o projeto seguindo o README | Must | Confirmado (exigência da entrega) |
+| RNF01 | Qualquer pessoa consegue instalar e executar o projeto seguindo o README | Must | Confirmado; implementado na SPEC 007 |
 | RNF02 | O Easter Egg está implementado e é demonstrável; o que é e onde fica é definido numa tarefa do épico E2, conforme a regra do evento | Must | Confirmado (exigência da entrega) |
 | RNF03 | Dados, integrações e presença simulados aparecem identificados como simulação | Must | Confirmado |
 | RNF04 | Prazos e quantidades de ofertas são reais: a oferta encerra ao expirar ou esgotar | Must | Confirmado |
