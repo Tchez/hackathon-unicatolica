@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+
+/* Tema do piloto (design §2). Outro shopping troca estes tokens sem mexer nos componentes. */
+@theme {
+  --color-primary: #b05828;
+  --color-primary-dark: #8e4720;
+  --color-gold: #c9a45c;
+  --color-gold-dark: #8a6a22;
+  --color-green: #2e7d32;
+  --color-brown: #7f562c;
+  --color-primary-soft: #f6e7dd;
+  --color-green-soft: #e6f1e3;
+  --color-gold-soft: #f5ecd8;
+  --color-brown-soft: #efe6dc;
+  --color-surface: #f2f2f2;
+  --color-background: #ffffff;
+  --color-text: #222222;
+  --color-muted: #666666;
+  --color-line: #e6e6e6;
+
+  --font-sans: 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 8px;
+
+  /* Easter Egg de sexta-feira 13: só entram em ação com `motion-safe:`. */
+  --animate-cat-walk: cat-walk 4s linear forwards;
+  --animate-lightning: lightning 0.5s ease-out forwards;
+  --animate-fade-out: fade-out 0.6s ease-out forwards;
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-shake: shake 0.5s ease-in-out;
+  --animate-bob: bob 2.4s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 2.4s ease-in-out infinite;
+
+  --shadow-glow: 0 0 24px color-mix(in srgb, var(--color-primary) 55%, transparent);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20%,
+    60% {
+      transform: translateX(-6px);
+    }
+    40%,
+    80% {
+      transform: translateX(6px);
+    }
+  }
+  @keyframes bob {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  @keyframes pulse-slow {
+    50% {
+      transform: scale(1.03);
+    }
+  }
+
+  @keyframes cat-walk {
+    from {
+      left: -4rem;
+    }
+    to {
+      left: 100%;
+    }
+  }
+  @keyframes lightning {
+    0% {
+      opacity: 0.9;
+    }
+    20% {
+      opacity: 0;
+    }
+    35% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background font-sans text-text antialiased;
+  }
+}
