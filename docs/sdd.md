@@ -4,7 +4,7 @@
 
 Como o MVP é construído. O **que** e o **porquê** estão no [PRD](prd.md); as decisões técnicas ficam na seção 8. Este documento precisa refletir o código entregue e define as convenções de código que todos seguem (seção 9).
 
-> **Status:** stack e convenções definidas no épico E4. Itens marcados com ⏳ ainda dependem de decisão.
+> **Status:** stack e convenções definidas no épico E4 e implementadas na base do projeto ([SPEC 001](specs/001-base-do-projeto.md)). Itens marcados com ⏳ ainda dependem de decisão.
 
 ## 1. Escopo técnico
 
@@ -48,17 +48,17 @@ flowchart LR
 
 | Camada | Escolha |
 |---|---|
-| Linguagem e base | TypeScript (strict), React, Vite |
+| Linguagem e base | TypeScript (strict), React 19, Vite 8 |
 | Rotas | React Router |
-| Estilo | Tailwind CSS |
+| Estilo | Tailwind CSS v4 (plugin `@tailwindcss/vite`, tokens no `@theme` de `src/index.css`) |
 | Estado e persistência | Zustand com `persist` (localStorage), sincronizado entre abas |
 | PWA | `vite-plugin-pwa` (manifest, ícones e service worker) |
 | Ícones | `lucide-react` |
 | Testes | Vitest, para as regras puras |
-| Qualidade | ESLint e Prettier |
+| Qualidade | ESLint (typescript-eslint, regras de hooks) e Prettier |
 | Publicação | ⏳ Hospedagem estática com HTTPS, necessária para instalar o PWA (seção 7) |
 
-Versões no `package.json`. Motivos e alternativas na seção 8.
+Versões no `package.json`; requer Node.js 20.19 ou mais recente. O TypeScript fica na série 6.0, a mais nova aceita pelo typescript-eslint. Motivos e alternativas na seção 8.
 
 ## 4. Módulos
 
@@ -89,6 +89,7 @@ Interfaces em `src/types/`. Valores em centavos (inteiros); datas em texto ISO 8
 | Movimento de pontos | `PointsEntry` | `id`, `userId`, `points` (positivo ou negativo), `reason` (`purchase`, `redemption`, `referral`), `refId`, `createdAt` |
 | Indicação | `Referral` | `id`, `referrerId`, `referredId`, `status` (`pending` ou `rewarded`) |
 
+- Campos além da tabela: `Offer.originalPriceCents` e `offerPriceCents` (preços ilustrativos, opcionais) e `Coupon.expiresAt` (validade de 60 min, Q10). Oferta encerrada antes do prazo tem `endsAt` igual ao momento do encerramento.
 - O saldo é a soma dos movimentos de pontos; não é guardado à parte.
 - O resgate previsto no PRD é o par cupom + movimento negativo de pontos.
 - A liberação de lote na hora acrescenta um lote com `releaseAt` igual ao momento do clique.
@@ -132,6 +133,8 @@ Instalação e execução no [README](../README.md#como-executar).
 | 13/11/2026 | Login simulado que leva ao perfil de visitante, lojista ou administração do shopping, na mesma aplicação | Mostra as três pontas em qualquer aparelho; F04 aceita login simulado | Aplicações separadas por perfil |
 | 13/11/2026 | Layout de aplicativo abaixo de 1024 px, instalável como PWA (`vite-plugin-pwa`); layout web acima | Na apresentação, o computador mostra a versão web e o celular mostra um app instalado | Só mobile; aplicativo nativo |
 | 13/11/2026 | Compra comprovada por código de uso único gerado pelo visitante e confirmado pelo lojista com o valor | O valor vem da loja, sem consultar a SEFAZ, e o código não pode ser reutilizado | Chave de 44 dígitos da NFC-e: valida loja e duplicidade, mas o valor exige o portal da SEFAZ, que tem captcha; QR gerado no caixa: exige integração com o sistema de vendas |
+| 14/11/2026 | Stores Zustand por módulo, com ações de domínio (resgatar, liberar lote, confirmar compra, trocar pontos, indicar) no próprio store, sem UI; `src/lib/storeRegistry.ts` sincroniza as abas pelo evento `storage` e restaura os dados | As telas dos módulos são feitas em paralelo sem editar os mesmos stores; o registro evita dependência circular entre módulos | Ações dentro das telas: regras duplicadas e conflitos entre branches |
+| 14/11/2026 | ESLint com typescript-eslint e TypeScript 6.0 | O template atual do Vite traz oxlint e TypeScript 7; o SDD pede ESLint e o typescript-eslint ainda não aceita o TypeScript 7 | oxlint do template |
 
 ## 9. Convenções de código
 
@@ -158,7 +161,7 @@ src/
 | Nomes (em inglês) | Componentes e telas em `PascalCase.tsx` (`OfferCard.tsx`, `OffersPage.tsx`); demais arquivos em `camelCase.ts`; hooks começam com `use`; interfaces em `PascalCase`, sem prefixo `I` |
 | Rotas | Em inglês, por perfil: `/login`, `/visitor/...`, `/merchant/...`, `/mall/...` |
 | Componentes reutilizáveis | Antes de criar, procure em `src/components/`. Componente novo nasce no módulo; ao ser usado por um segundo módulo, vai para `src/components/` |
-| Dados simulados | `src/data/*.ts`, exportados com os tipos de `src/types/`. Nomes e lojas fictícios; nunca dados pessoais reais |
+| Dados simulados | `src/data/*.ts`, funções `create…` que devolvem os dados iniciais com os tipos de `src/types/` (datas relativas ao momento da criação). Nomes e lojas fictícios; nunca dados pessoais reais |
 | Regras de negócio em aberto | Constantes em `src/config/business-rules.ts`, com comentário citando a pergunta do PRD (ex.: `// Q03: taxa provisória`). Nunca espalhe esses valores pelo código |
 | Identificação de simulação | Componente `SimulatedBadge` ao lado de todo dado ou ação simulada, e aviso fixo "Protótipo com dados simulados" no layout |
 | Responsividade | Classes mobile-first; o layout web usa o prefixo `lg:` (1024 px) |

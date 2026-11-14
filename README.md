@@ -40,9 +40,7 @@ Pilares, em ordem de prioridade, para transformar visitas e compras pontuais em 
 
 ## Como executar
 
-> ⏳ A base do código está sendo criada no épico E4; estes comandos passam a valer quando ela chegar à `develop`.
-
-**Pré-requisitos:** [Node.js](https://nodejs.org/) 22 ou mais recente e Git.
+**Pré-requisitos:** [Node.js](https://nodejs.org/) 20.19 ou mais recente e Git.
 
 ```bash
 git clone https://github.com/Tchez/hackathon-unicatolica.git
@@ -75,6 +73,14 @@ Abra http://localhost:5173. O app abre sem login; para resgatar, pontuar ou entr
 ├── CONTRIBUTING.md            # fluxo de trabalho: tarefas, branches, commits, PRs
 ├── AGENTS.md                  # regras para assistentes de IA (CLAUDE.md importa este arquivo)
 ├── src/                       # código; estrutura no SDD, seção 9
+│   ├── app/                   # rotas, layouts (web e app) e guarda de perfil
+│   ├── features/<módulo>/     # account, offers, points, referral, mall (telas, estado e ações)
+│   ├── components/            # componentes compartilhados
+│   ├── lib/                   # regras puras, com testes ao lado
+│   ├── config/                # regras de negócio provisórias e dados do shopping
+│   ├── data/                  # dados simulados iniciais
+│   └── types/                 # interfaces do modelo de dados
+├── public/                    # ícones do PWA
 └── docs/
     ├── prd.md                 # requisitos de produto, priorizados em MoSCoW
     ├── sdd.md                 # design de software e decisões técnicas

@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+
+/* Tema do piloto (design §2). Outro shopping troca estes tokens sem mexer nos componentes. */
+@theme {
+  --color-primary: #b05828;
+  --color-primary-dark: #8e4720;
+  --color-gold: #c9a45c;
+  --color-gold-dark: #8a6a22;
+  --color-green: #2e7d32;
+  --color-brown: #7f562c;
+  --color-primary-soft: #f6e7dd;
+  --color-green-soft: #e6f1e3;
+  --color-gold-soft: #f5ecd8;
+  --color-brown-soft: #efe6dc;
+  --color-surface: #f2f2f2;
+  --color-background: #ffffff;
+  --color-text: #222222;
+  --color-muted: #666666;
+  --color-line: #e6e6e6;
+
+  --font-sans: 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 8px;
+}
+
+@layer base {
+  body {
+    @apply bg-background font-sans text-text antialiased;
+  }
+}
