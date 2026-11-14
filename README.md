@@ -14,7 +14,7 @@ Módulo para o app do shopping que cria motivos para o visitante ir e voltar: ca
 | 2. Repositório do projeto | Este repositório, branch `main`; código em `src/` ([estrutura](#estrutura-do-repositório)) |
 | 3. Documentação técnica | [SDD](docs/sdd.md) (arquitetura, stack, módulos, dados, decisões), [PRD](docs/prd.md), [design](docs/design.md) e [specs](docs/specs/) |
 | 4. Instruções de execução | [Como executar](#como-executar) |
-| 5. Vídeo de até 90 s | [Vídeo](docs/pitch/pitch-90s.mp4) (versão parcial) e [roteiro](docs/pitch/) |
+| 5. Vídeo de até 90 s | [Vídeo](docs/pitch/pitch-90s.mp4) e [roteiro](docs/pitch/) |
 | 6. Resumo de uma página | [Notion](https://app.notion.com/p/Fidelidade-Shopping-41878f6a5d5580eebeceed7129a6b679) |
 
 ## O desafio
