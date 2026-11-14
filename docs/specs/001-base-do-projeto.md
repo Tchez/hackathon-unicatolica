@@ -65,7 +65,7 @@ Telas que exigem conta, acessadas sem login, levam a `/login`; depois do login, 
 - **Dados iniciais** em `src/data/`. Nomes e lojas fictícios:
   - **Usuários:** Ana (visitante, 0 pontos), Bruno (visitante, 420 pontos em 3 compras, 1 cupom ativo, código `BRUNO100`), Carla (visitante, código `CARLA100`, indicada pelo Bruno, bônus pendente), TechPlay (lojista, eletrônicos), Café Ipê (lojista, café) e Administração do shopping (`mall`).
   - **Lojas:** TechPlay, Café Ipê e mais 4 lojas fictícias, cada uma com `slogan` (lista em `src/data/stores.ts`).
-  - **Campanha "11/11 no Capim":** datada de 11/11 do ano corrente; oferta "Placa de vídeo 60% OFF" da TechPlay, de R$ 2.499 por R$ 999, com 5 unidades num lote sem horário; o lote sai pelo painel do shopping. Mais 2 ofertas de outras lojas.
+  - **Campanha "11/11 no Capim":** datada de 11/11 do ano corrente; oferta "TV 50 polegadas 50% OFF" da TechPlay, de R$ 2.999 por R$ 1.499, com 5 unidades num lote sem horário; o lote sai pelo painel do shopping. Mais 2 ofertas de outras lojas.
   - **Ofertas relâmpago:** "Café Ipê · 2 cafés por R$ 12" e "TechPlay · Fone Bluetooth 30% OFF".
   - **Recompensas:** R$ 10 de desconto e estacionamento 2 h por 500 pontos; R$ 25 de desconto por 1.200 pontos.
 - **Regras provisórias** em `src/config/business-rules.ts`, cada uma com comentário citando a pergunta do PRD:

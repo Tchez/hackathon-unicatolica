@@ -1,4 +1,4 @@
-import { Gift, Megaphone, Receipt, Share2, Star, Ticket, type LucideIcon } from 'lucide-react'
+import { Gift, Megaphone, Receipt, Share2, Star, Ticket, Vote, type LucideIcon } from 'lucide-react'
 import { Link } from 'react-router'
 
 interface Shortcut {
@@ -20,6 +20,7 @@ const SHORTCUTS: Shortcut[] = [
     tone: 'bg-brown-soft text-brown',
   },
   { label: 'Pontos', to: '/visitor/points', icon: Star, tone: 'bg-primary-soft text-primary' },
+  { label: 'Votar', to: '/visitor/poll', icon: Vote, tone: 'bg-gold-soft text-gold-dark' },
   { label: 'Indicar', to: '/visitor/referral', icon: Share2, tone: 'bg-green-soft text-green' },
 ]
 

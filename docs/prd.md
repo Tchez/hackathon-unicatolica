@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| **Status** | MVP implementado (specs 001 a 007); versão online pendente; entrega em 14/11/2026 até 12h |
+| **Status** | MVP implementado (specs 001 a 009); versão online pendente; entrega em 14/11/2026 até 12h |
 | **Entrega** | Sábado, 14/11/2026, até as 12h: MVP funcional, repositório, documentação e instruções de execução, com o Easter Egg demonstrável |
 | **Prioridade** | [MoSCoW](https://www.agilebusiness.org/dsdm-project-framework/moscow-prioritisation.html): **Must** (núcleo do MVP), **Should** e **Could** (bônus, nessa ordem), **Won't** (fora desta entrega) |
 
@@ -61,7 +61,7 @@ Em aberto: priorizar visitantes novos ou ocasionais, ou recompensar os frequente
 | 3 | **Pertencimento e participação** | O público decide entre opções de programação, como qual jogo transmitir, e vê a escolha acontecer | Should: tem muitas possibilidades e exige tempo, melhor não entregar incompleto |
 | 4 | **Marketing e divulgação** | Canais do shopping e dos lojistas, redes sociais, influenciadores, comunidades e programa de indicação | Must: sem divulgação, as campanhas não funcionam |
 
-**Lógica das ofertas de destaque.** Uma oferta de grande apelo e poucas unidades atrai atenção para o conjunto. Exemplo hipotético: cinco placas de vídeo com 60% de desconto atraem mil visitantes; além das cinco vendas, o interesse está nas outras 995 pessoas, que já estão no shopping e podem encontrar ofertas de margem mais sustentável. Os números são ilustrativos. A conversão de quem não resgatou precisa ser validada, e os lotes anunciados devem existir.
+**Lógica das ofertas de destaque.** Uma oferta de grande apelo e poucas unidades atrai atenção para o conjunto. Exemplo hipotético: cinco TVs pela metade do preço atraem mil visitantes; além das cinco vendas, o interesse está nas outras 995 pessoas, que já estão no shopping e podem encontrar ofertas de margem mais sustentável. Os números são ilustrativos. A conversão de quem não resgatou precisa ser validada, e os lotes anunciados devem existir.
 
 **Referência usada.** O Capim Dourado Shopping, em Palmas (TO), foi o exemplo da discussão. Segundo o levantamento da equipe, seu aplicativo tem conta, cupons, promoções, eventos, cinema, pagamento e localização de vaga, mapa, lojas favoritas e QR code; segundo notícias locais, ainda a confirmar, suas campanhas sazonais exigiam valor alto em notas (Natal 2025: R$ 900 em compras). É uma referência exploratória, não um diagnóstico do setor.
 
@@ -77,7 +77,7 @@ Em aberto: priorizar visitantes novos ou ocasionais, ou recompensar os frequente
 | F23 | Estacionamento como resgate de pontos | 2 | **Must** | Confirmado | Trocar pontos por desconto ou isenção; limitar o resgate, porque estacionamento é receita do shopping |
 | F27 | Programa de indicação, com código por usuário, influenciador ou comunidade | 4 | **Must** | Confirmado; momento do bônus em aberto | Quem indica e quem é indicado ganham pontos de bônus (incorpora a antiga F21, bônus no cadastro); liberar na primeira compra comprovada reduz contas falsas |
 | F04 | Conta do usuário | Base | **Must** | Confirmado (login simulado, D11) | Vincular saldo, resgates e indicações a um usuário; login simples ou simulado |
-| F07 | Votação entre opções fechadas, com resultado refletido na programação | 3 | Should | Confirmado como parte do pilar 3 | Um voto por usuário; só votar o que o shopping vai cumprir; risco de captura por grupos organizados |
+| F07 | Votação entre opções fechadas, com resultado refletido na programação | 3 | Should | Confirmado como parte do pilar 3; versão mínima implementada (SPEC 009) | Um voto por usuário; só votar o que o shopping vai cumprir; risco de captura por grupos organizados |
 | F09 | Eventos escolhidos com participação das comunidades, com eventual brinde | 3 | Should | Confirmado como parte do pilar 3 | Depende da operação do shopping |
 | F30 | Encontros em datas marcantes, como finais de campeonato e festividades, com brindes durante o evento | 3 | Should | Proposto | Efeito acaba com o evento; bebida alcoólica exige controle de idade e opção sem álcool; brinde condicionado a compra com estoque limitado pode exigir autorização federal |
 | F31 | Votações sobre eventos e decisões do shopping, como tema da decoração ou próxima atração | 3 | Should | Proposto | Mesmos riscos da F07 |
@@ -142,7 +142,7 @@ Decisões técnicas ficam no [SDD](sdd.md#8-decisões-técnicas).
 |---|---|---|
 | D01 | Atender ao Desafio 05 para shopping centers em geral | Capim Dourado é exemplo, não restrição |
 | D02 | Pilares por prioridade: campanhas recorrentes (foco), pontos, marketing; pertencimento é bônus | Concentrar o MVP no que atrai e traz de volta |
-| D03 | Votação entre opções fechadas para decidir a programação | Vale se o pilar 3 for feito |
+| D03 | Votação entre opções fechadas para decidir a programação | Vale se o pilar 3 for feito; versão mínima implementada (SPEC 009) |
 | D04 | Relatos de incidentes exigem fatos e evidências | Vale se a F10 for feita |
 | D05 | Separar decisões de possibilidades | Evitar que sugestões virem compromissos |
 | D06 | Ofertas relâmpago criadas pelo lojista, com aviso a quem está no shopping ou perto | Uso opcional pela loja, para horários fracos |
@@ -205,7 +205,7 @@ Integrações com aplicativos de shopping, consulta de notas e detecção de pre
 
 ## 12. Demonstração
 
-Cenário ilustrativo: uma campanha de 11/11 anuncia cinco placas de vídeo com 60% de desconto em um lote liberado durante o dia, junto de promoções em outras lojas. A visitante chega cedo e circula enquanto aguarda. No lote, ela tenta resgatar: consegue e compra, ou encontra o esgotado e aproveita outra promoção. A compra comprovada gera pontos para a próxima visita.
+Cenário ilustrativo: uma campanha de 11/11 anuncia cinco TVs pela metade do preço em um lote liberado durante o dia, junto de promoções em outras lojas. A visitante chega cedo e circula enquanto aguarda. No lote, ela tenta resgatar: consegue e compra, ou encontra o esgotado e aproveita outra promoção. A compra comprovada gera pontos para a próxima visita.
 
 Critérios propostos:
 

@@ -113,3 +113,24 @@ export interface Referral {
 
 /** Resultado das ações de domínio: sucesso com valor ou erro com código. */
 export type Result<T, E extends string> = { ok: true; value: T } | { ok: false; error: E }
+
+export interface PollOption {
+  id: string
+  label: string
+}
+
+export interface Poll {
+  id: string
+  question: string
+  options: PollOption[]
+  closesAt: string
+  /** Preenchido quando o shopping encerra antes do prazo. */
+  closedAt?: string
+}
+
+export interface PollVote {
+  pollId: string
+  userId: string
+  optionId: string
+  createdAt: string
+}

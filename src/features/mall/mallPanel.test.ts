@@ -2,7 +2,7 @@ import React, { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { GPU_OFFER_ID } from '../../data/offers'
+import { TV_OFFER_ID } from '../../data/offers'
 import { useAccountStore } from '../account/accountStore'
 import { useOffersStore } from '../offers/offersStore'
 import { usePointsStore } from '../points/pointsStore'
@@ -29,7 +29,7 @@ describe('painel do shopping', () => {
   it('mostra a campanha atual, as ofertas com lotes e o botão de liberar', () => {
     const html = render(MallHomePage)
     expect(html).toContain('11/11 no Capim')
-    expect(html).toContain('Placa de vídeo 60% OFF')
+    expect(html).toContain('TV 50 polegadas 50% OFF')
     expect(html).toContain('Livros selecionados 30% OFF')
     expect(html).toContain('Camisetas 40% OFF')
     expect(html).toContain('Liberar lote agora')
@@ -55,7 +55,7 @@ describe('painel do shopping', () => {
   })
 
   it('atualiza os números e os lotes depois de uma troca e de uma liberação', () => {
-    useOffersStore.getState().releaseBatch(GPU_OFFER_ID, 5)
+    useOffersStore.getState().releaseBatch(TV_OFFER_ID, 5)
     usePointsStore.getState().redeemReward('user-bruno', 'reward-discount-10')
     const html = render(MallHomePage)
     expect(html).toContain('Lote 1 · 5 unidades')
@@ -69,8 +69,8 @@ describe('painel do shopping', () => {
     points.confirmPurchase('store-techplay', code.value.code, 250_000)
     useOffersStore.getState().markPresence('user-ana', true)
     useOffersStore.getState().markPresence('user-bruno', true)
-    useOffersStore.getState().releaseBatch(GPU_OFFER_ID, 5)
-    useOffersStore.getState().claimCoupon('user-ana', GPU_OFFER_ID)
+    useOffersStore.getState().releaseBatch(TV_OFFER_ID, 5)
+    useOffersStore.getState().claimCoupon('user-ana', TV_OFFER_ID)
 
     const home = render(MallHomePage)
     // Prova de que a tela já reflete esses dados: R$ 4.200,00 do histórico + R$ 2.500,00 da Ana.
@@ -112,7 +112,7 @@ describe('ofertas relâmpago do shopping', () => {
     expect(html).toContain('Liberada')
     expect(html).toContain('Termina em')
     expect(html).toContain('Restantes')
-    expect(html).not.toContain('Placa de vídeo')
+    expect(html).not.toContain('TV 50 polegadas')
   })
 
   it('tira da lista a oferta encerrada pela loja', () => {

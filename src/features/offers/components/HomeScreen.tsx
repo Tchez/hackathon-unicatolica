@@ -49,7 +49,7 @@ export function HomeScreen() {
     const liveCount = campaignOffers.filter((offer) => getOfferStatus(offer, now) === 'live').length
     let subtitle = 'Campanha encerrada'
     if (running) {
-      if (hasUpcoming) subtitle = 'Próximo lote: surpresa · hoje'
+      if (hasUpcoming) subtitle = 'Data dupla · lote surpresa hoje'
       else if (liveCount > 0)
         subtitle = `${liveCount} ${liveCount === 1 ? 'oferta liberada' : 'ofertas liberadas'} agora`
       else subtitle = 'Todas as ofertas da campanha esgotaram'

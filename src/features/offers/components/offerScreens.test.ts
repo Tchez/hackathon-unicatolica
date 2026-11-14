@@ -2,7 +2,7 @@ import { createElement, type ReactElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { COFFEE_FLASH_OFFER_ID, GPU_OFFER_ID } from '../../../data/offers'
+import { COFFEE_FLASH_OFFER_ID, TV_OFFER_ID } from '../../../data/offers'
 import { OfferDetailPage } from '../pages/OfferDetailPage'
 import { HomeScreen } from './HomeScreen'
 
@@ -31,7 +31,7 @@ afterEach(() => {
 
 describe('detalhe da oferta', () => {
   it('em breve: lote surpresa, sem botão de resgate', () => {
-    const html = detail(GPU_OFFER_ID)
+    const html = detail(TV_OFFER_ID)
     expect(html).toContain('Próximo lote: surpresa')
     expect(html).not.toContain('Resgatar cupom')
   })

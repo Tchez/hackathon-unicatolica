@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { COFFEE_FLASH_OFFER_ID, GPU_OFFER_ID } from '../../data/offers'
+import { COFFEE_FLASH_OFFER_ID, TV_OFFER_ID } from '../../data/offers'
 import { useAccountStore } from '../account/accountStore'
 import { usePointsStore } from '../points/pointsStore'
 import { useOffersStore } from './offersStore'
@@ -34,14 +34,14 @@ describe('claimCoupon', () => {
   })
 
   it('recusa lote ainda não liberado', () => {
-    expect(offers().claimCoupon('user-ana', GPU_OFFER_ID)).toEqual({ ok: false, error: 'upcoming' })
+    expect(offers().claimCoupon('user-ana', TV_OFFER_ID)).toEqual({ ok: false, error: 'upcoming' })
   })
 
   it('respeita a quantidade restante até esgotar', () => {
-    offers().releaseBatch(GPU_OFFER_ID, 1)
-    expect(offers().claimCoupon('user-ana', GPU_OFFER_ID).ok).toBe(true)
-    expect(offers().claimCoupon('user-bruno', GPU_OFFER_ID)).toEqual({ ok: false, error: 'sold_out' })
-    expect(find(GPU_OFFER_ID).redeemedCount).toBe(1)
+    offers().releaseBatch(TV_OFFER_ID, 1)
+    expect(offers().claimCoupon('user-ana', TV_OFFER_ID).ok).toBe(true)
+    expect(offers().claimCoupon('user-bruno', TV_OFFER_ID)).toEqual({ ok: false, error: 'sold_out' })
+    expect(find(TV_OFFER_ID).redeemedCount).toBe(1)
   })
 
   it('recusa oferta encerrada e usuário que não é visitante', () => {
@@ -61,15 +61,15 @@ describe('claimCoupon', () => {
 describe('releaseBatch', () => {
   it('acrescenta um lote liberado na hora e a oferta passa a estar liberada', () => {
     const now = Date.now()
-    const result = offers().releaseBatch(GPU_OFFER_ID, 5, now)
+    const result = offers().releaseBatch(TV_OFFER_ID, 5, now)
     expect(result.ok).toBe(true)
-    expect(find(GPU_OFFER_ID).batches).toEqual([{ releaseAt: new Date(now).toISOString(), quantity: 5 }])
-    expect(offers().getOfferStatus(find(GPU_OFFER_ID), now)).toBe('live')
-    expect(offers().getRemaining(find(GPU_OFFER_ID), now)).toBe(5)
+    expect(find(TV_OFFER_ID).batches).toEqual([{ releaseAt: new Date(now).toISOString(), quantity: 5 }])
+    expect(offers().getOfferStatus(find(TV_OFFER_ID), now)).toBe('live')
+    expect(offers().getRemaining(find(TV_OFFER_ID), now)).toBe(5)
   })
 
   it('recusa quantidade inválida e oferta inexistente', () => {
-    expect(offers().releaseBatch(GPU_OFFER_ID, 0)).toEqual({ ok: false, error: 'invalid_quantity' })
+    expect(offers().releaseBatch(TV_OFFER_ID, 0)).toEqual({ ok: false, error: 'invalid_quantity' })
     expect(offers().releaseBatch('nao-existe', 5)).toEqual({ ok: false, error: 'offer_not_found' })
   })
 })

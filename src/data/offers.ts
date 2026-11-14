@@ -1,7 +1,7 @@
 import type { Campaign, Offer } from '../types'
 
 export const CAMPAIGN_1111_ID = 'campaign-1111'
-export const GPU_OFFER_ID = 'offer-gpu'
+export const TV_OFFER_ID = 'offer-tv'
 export const COFFEE_FLASH_OFFER_ID = 'offer-flash-cafe'
 export const HEADPHONE_FLASH_OFFER_ID = 'offer-flash-fone'
 
@@ -15,7 +15,8 @@ export function createCampaigns(now: number): Campaign[] {
       // 11 de novembro do ano corrente, no horário local: o nome da campanha é a data.
       date: new Date(new Date(now).getFullYear(), 10, 11).toISOString(),
       storeIds: ['store-techplay', 'store-livraria-folha', 'store-moda-sol'],
-      description: 'Ofertas de grande desconto em quantidade limitada, liberadas em lotes durante o dia.',
+      description:
+        'Data dupla: ofertas de grande desconto em quantidade limitada, liberadas em lotes surpresa durante o dia.',
     },
   ]
 }
@@ -26,13 +27,13 @@ export function createOffers(now: number): Offer[] {
   return [
     {
       // Sem lote: o lote de 5 unidades sai pelo painel do shopping ("Liberar lote agora").
-      id: GPU_OFFER_ID,
+      id: TV_OFFER_ID,
       storeId: 'store-techplay',
       campaignId: CAMPAIGN_1111_ID,
-      title: 'Placa de vídeo 60% OFF',
-      discountPercent: 60,
-      originalPriceCents: 249_900,
-      offerPriceCents: 99_900,
+      title: 'TV 50 polegadas 50% OFF',
+      discountPercent: 50,
+      originalPriceCents: 299_900,
+      offerPriceCents: 149_900,
       batches: [],
       endsAt: iso(24 * HOUR),
       redeemedCount: 0,

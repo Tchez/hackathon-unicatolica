@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { COFFEE_FLASH_OFFER_ID, GPU_OFFER_ID, HEADPHONE_FLASH_OFFER_ID } from '../../../../data/offers'
+import { COFFEE_FLASH_OFFER_ID, TV_OFFER_ID, HEADPHONE_FLASH_OFFER_ID } from '../../../../data/offers'
 import { getOfferStatus, getRemaining } from '../../../../lib/offers'
 import { useAccountStore } from '../../../account/accountStore'
 import { useOffersStore } from '../../offersStore'
@@ -14,7 +14,7 @@ beforeEach(() => {
 describe('getMerchantOffers', () => {
   it('lista só as ofertas da loja, com as em andamento antes das em breve', () => {
     const list = getMerchantOffers(offers().offers, 'store-techplay', Date.now())
-    expect(list.map((item) => item.offer.id)).toEqual([HEADPHONE_FLASH_OFFER_ID, GPU_OFFER_ID])
+    expect(list.map((item) => item.offer.id)).toEqual([HEADPHONE_FLASH_OFFER_ID, TV_OFFER_ID])
     expect(list.map((item) => item.status)).toEqual(['live', 'upcoming'])
   })
 
@@ -35,7 +35,7 @@ describe('getMerchantOffers', () => {
     const list = getMerchantOffers(offers().offers, 'store-techplay', now + 1000)
     expect(list.map((item) => [item.offer.id, item.status])).toEqual([
       [created.value.id, 'live'],
-      [GPU_OFFER_ID, 'upcoming'],
+      [TV_OFFER_ID, 'upcoming'],
       [HEADPHONE_FLASH_OFFER_ID, 'ended'],
     ])
   })

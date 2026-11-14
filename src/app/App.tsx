@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router'
 import { LoginPage } from '../features/account/pages/LoginPage'
 import { ProfilePage } from '../features/account/pages/ProfilePage'
 import { CampaignsPage } from '../features/offers/pages/CampaignsPage'
+import { PollPage } from '../features/community/pages/PollPage'
 import { CreateOfferPage } from '../features/offers/pages/CreateOfferPage'
 import { HomePage } from '../features/offers/pages/HomePage'
 import { MerchantHomePage } from '../features/offers/pages/MerchantHomePage'
@@ -37,6 +38,7 @@ export function App() {
         <Route element={<RouteGuard allow={['visitor', 'guest']} />}>
           <Route path="/visitor/campaigns" element={<CampaignsPage />} />
           <Route path="/visitor/offers/:offerId" element={<OfferDetailPage />} />
+          <Route path="/visitor/poll" element={<PollPage />} />
         </Route>
 
         <Route element={<RouteGuard allow={['visitor']} />}>

@@ -67,7 +67,7 @@ O app abre sem login. Ver campanhas e ofertas não exige conta; resgatar, pontua
 | ID | Jornada | Passos |
 |---|---|---|
 | J1 | Convidado descobre a campanha e cria conta | Não logado vê a campanha 11/11 no carrossel → abre a oferta → tenta resgatar → cria conta com código de indicação → volta à oferta |
-| J2 | Dia da campanha | Visitante marca "Estou no shopping" → recebe o aviso do lote → resgata o cupom da placa de vídeo → cupom em "Meus cupons" |
+| J2 | Dia da campanha | Visitante marca "Estou no shopping" → recebe o aviso do lote → resgata o cupom da TV → cupom em "Meus cupons" |
 | J3 | Chegou tarde | Visitante abre a oferta esgotada → vê alternativas → resgata outra oferta |
 | J4 | Compra comprovada | Visitante gera o código → lojista confirma com o valor → visitante vê os pontos e quanto falta |
 | J5 | Troca de pontos | Visitante abre Pontos → troca por estacionamento → cupom em "Meus cupons" |
