@@ -2,16 +2,18 @@
 
 **Desafio 05: engajamento e fidelização dos visitantes**
 
-Uma proposta para fortalecer o relacionamento entre shopping centers e seus visitantes por meio de campanhas promocionais recorrentes, pontos por compras e pertencimento pela participação na programação.
+Uma proposta para fortalecer o relacionamento entre shopping centers e seus visitantes por meio de campanhas promocionais recorrentes, pontos por compras e divulgação com indicação.
 
-## Entrega da primeira fase
+> **Status:** escopo do MVP definido; protótipo em construção. Entrega final em 14/11/2026, até as 12h.
 
-Esta entrega reúne o repositório no GitHub e a documentação da ideia no Notion. O projeto está na fase de concepção: este repositório contém a proposta da equipe, sem código de aplicação ou protótipo implementado.
+## Sumário
 
-| Onde encontrar | Conteúdo |
-|---|---|
-| [Documentação no Notion](https://cute-felidae-d88.notion.site/Proposta-de-solu-o-41778f6a5d55809f9337f0b2172416ef) | Documento da ideia elaborado pela equipe |
-| [Proposta detalhada neste repositório](docs/solucao.md) | Solução, funcionalidades discutidas, decisões, perguntas em aberto e riscos |
+- [O desafio](#desafio-05)
+- [A solução](#a-solução)
+- [Como executar](#como-executar)
+- [Estrutura do repositório](#estrutura-do-repositório)
+- [Documentação](#documentação)
+- [Como contribuir](#como-contribuir)
 
 ## Desafio 05
 
@@ -25,32 +27,43 @@ Enunciado transcrito da folha do desafio fornecida pela organização:
 
 ## A solução
 
-A equipe propõe três pilares para transformar visitas e compras pontuais em um relacionamento contínuo.
+Pilares, em ordem de prioridade, para transformar visitas e compras pontuais em um relacionamento contínuo. Requisitos e prioridades completos no [PRD](docs/prd.md).
 
 | Pilar | Como funciona | Resultado esperado |
 |---|---|---|
-| **Promoções no estilo Black Friday, o ano todo** | Campanhas recorrentes em datas fáceis de lembrar, como 11/11 e 12/12, combinam ofertas de grande desconto e quantidade limitada com outras promoções. Lojistas também publicam ofertas relâmpago. | Motivar a ida em dias específicos, a chegada antecipada e a permanência até a liberação das ofertas, ampliando a circulação pelas lojas |
-| **Pontos e descontos** | Compras comprovadas geram pontos proporcionais ao valor, que podem ser trocados por descontos futuros. | Dar ao visitante um motivo para retornar |
-| **Pertencimento e participação** | O público ajuda a decidir a programação e mobiliza outras pessoas para escolher jogos, eventos e atividades. | Fazer o visitante reconhecer sua escolha na programação e querer participar e voltar |
+| **1. Campanhas recorrentes (foco)** | Campanhas em datas fáceis de lembrar, como 11/11 e 12/12, combinam ofertas de grande desconto e quantidade limitada com outras promoções. As promoções e as lojas participantes mudam a cada campanha. Fora delas, a loja pode publicar ofertas relâmpago, se quiser. | Motivar a ida em dias específicos, a chegada antecipada e a permanência até a liberação das ofertas |
+| **2. Pontos e descontos** | Compras comprovadas geram pontos proporcionais ao valor, trocados por descontos futuros ou estacionamento. | Dar ao visitante um motivo para retornar |
+| **3. Pertencimento e participação (bônus)** | O público ajuda a decidir a programação, como qual jogo transmitir. | Fazer o visitante reconhecer sua escolha na programação |
+| **4. Marketing e divulgação** | Canais do shopping e dos lojistas, redes sociais, influenciadores, comunidades e programa de indicação, em que quem indica e quem é indicado ganham pontos. | Fazer as campanhas serem conhecidas |
 
-Uma oferta de grande destaque atrai atenção para o conjunto das lojas e promoções. O retorno esperado inclui compras de quem não conseguiu o cupom principal, mas já está no shopping e encontra outras ofertas com descontos mais sustentáveis para os lojistas. Esse efeito precisa ser validado na prática.
+**Exemplo de uso.** O shopping divulga antecipadamente sua campanha de **11/11**, com **cinco placas de vídeo com 60% de desconto** liberadas em um lote limitado durante o dia, além de promoções em outras lojas. Visitantes chegam cedo e circulam enquanto aguardam. Quem consegue resgata o cupom e compra; quem não consegue aproveita outra promoção, pois já está no local. A compra comprovada gera pontos para a próxima visita. O cenário é ilustrativo: datas, quantidades e descontos não definem regras comerciais.
 
-### Um exemplo de uso
+## Como executar
 
-O shopping divulga antecipadamente sua campanha de **11/11**, com **cinco placas de vídeo com 60% de desconto**, liberadas em um lote limitado durante o dia, além de promoções em outras lojas. Visitantes chegam cedo para tentar aproveitar a oferta e circulam pelo shopping enquanto aguardam sua liberação.
+⏳ Instruções de instalação, configuração e execução serão adicionadas com o código, junto com a stack definida no [SDD](docs/sdd.md).
 
-Quem consegue resgata o cupom e compra. Quem não consegue pode aproveitar outra promoção, fazer uma refeição ou comprar em outra loja, pois já está no local. Uma compra comprovada gera pontos para uma próxima visita.
+## Estrutura do repositório
 
-### Pertencimento na prática
+```
+.
+├── README.md
+├── CONTRIBUTING.md            # fluxo de trabalho: tarefas, branches, commits, PRs
+├── AGENTS.md                  # regras para assistentes de IA (CLAUDE.md importa este arquivo)
+└── docs/
+    ├── prd.md                 # requisitos de produto, priorizados em MoSCoW
+    ├── sdd.md                 # design de software e decisões técnicas
+    └── specs/                 # fatias de implementação (000-modelo.md)
+```
 
-Imagine dois jogos do Brasileirão acontecendo no mesmo horário de uma quarta-feira. O shopping abre uma votação para o público decidir qual será transmitido. Torcedores podem convidar amigos e fazer campanha pelo seu time; ver a própria escolha na programação cria um motivo para comparecer e participar das próximas votações.
+## Documentação
 
-Campanhas e votações dependem de divulgação antes e durante as ações: canais do shopping e dos lojistas, redes sociais, parcerias com influenciadores e mobilização das comunidades. A expectativa é transformar participação na escolha em presença e vínculo recorrente.
+| Documento | Conteúdo |
+|---|---|
+| [PRD](docs/prd.md) | Problema, objetivos e não objetivos, requisitos funcionais e não funcionais priorizados em MoSCoW, decisões de produto, métricas, riscos e perguntas em aberto |
+| [SDD](docs/sdd.md) | Arquitetura, stack, módulos, modelo de dados, o que é real e o que é simulado, decisões técnicas |
+| [Specs](docs/specs/000-modelo.md) | Fatias de implementação, uma por arquivo |
+| [Notion da equipe](https://cute-felidae-d88.notion.site/Proposta-de-solu-o-41778f6a5d55809f9337f0b2172416ef) | Documento da ideia entregue na primeira fase |
 
-Esses cenários são ilustrativos. Datas, quantidades e descontos não definem regras comerciais; presença e compras adicionais são resultados esperados, não garantidos. A demonstração ainda será construída.
+## Como contribuir
 
-## O que está definido e o que falta decidir
-
-Os três pilares, as campanhas recorrentes com ofertas limitadas, as ofertas relâmpago criadas pelo lojista e a participação do público na programação orientam a proposta. Ainda precisam ser definidos o formato da solução, a comprovação de compras, a identificação de presença, as regras de pontos, o financiamento dos descontos, o calendário das campanhas e a operação de divulgação e parcerias.
-
-A [proposta detalhada](docs/solucao.md) distingue decisões confirmadas de possibilidades. O escopo do protótipo e suas integrações serão definidos na próxima etapa; as funcionalidades descritas ainda não foram implementadas.
+Veja o [CONTRIBUTING.md](CONTRIBUTING.md): tarefas no quadro do GitHub, uma branch por issue, Conventional Commits e pull requests que fecham a issue. O código sobe por `dev` → `hml` → `main`, sempre por pull request.
