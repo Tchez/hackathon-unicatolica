@@ -57,12 +57,12 @@ Abra http://localhost:5173. O app abre sem login; para resgatar, pontuar ou entr
 | `npm run dev` | Servidor de desenvolvimento |
 | `npm run dev -- --host` | Mesmo servidor, acessível por outro aparelho na mesma rede |
 | `npm run build` | Gera a versão de produção em `dist/` |
-| `npm run preview` | Serve o build localmente |
+| `npm run preview` | Serve o build localmente, em http://localhost:4173/hackathon-unicatolica/ |
 | `npm test` | Testes das regras (Vitest) |
 | `npm run lint` | Verifica o código (ESLint) |
 | `npm run format` | Formata o código (Prettier) |
 
-**Versão publicada:** ⏳ link público.
+**Versão publicada:** https://tchez.github.io/hackathon-unicatolica/ (cada push na `main` publica de novo).
 
 **Notas do ambiente:**
 

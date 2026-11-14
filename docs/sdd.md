@@ -120,7 +120,7 @@ Exigência do RNF03: tudo o que for simulado aparece como simulação na interfa
 
 Instalação e execução no [README](../README.md#como-executar).
 
-- O build gera arquivos estáticos em `dist/`, publicados no GitHub Pages por GitHub Actions, em `https://tchez.github.io/hackathon-unicatolica/` (subcaminho, `base` do Vite e `basename` do roteador). Push na `main` publica; o disparo manual publica outra branch. Links diretos funcionam por `404.html`, cópia do `index.html`. Detalhes na [SPEC 008](specs/008-deploy-github-pages.md).
+- O build gera arquivos estáticos em `dist/`, publicados no GitHub Pages por GitHub Actions, em `https://tchez.github.io/hackathon-unicatolica/` (subcaminho, `base` do Vite e `basename` do roteador). Push na `main` publica; o disparo manual republica a `main` (o ambiente `github-pages` aceita só a `main`). Links diretos funcionam por `404.html`, cópia do `index.html`. Detalhes na [SPEC 008](specs/008-deploy-github-pages.md).
 - O service worker só funciona em HTTPS ou em `localhost` (`npm run build && npm run preview`), nunca sob `npm run dev`. Para instalar no celular, é preciso o link publicado; o service worker atualiza o app aberto após uma nova publicação.
 - A ação "Restaurar dados de demonstração" (módulo `account`, no perfil) grava os dados iniciais em todos os stores e encerra a sessão da aba que a acionou, para cada demonstração começar igual. Os dados de demonstração são relativos ao tempo (a campanha termina 24 h e as ofertas relâmpago 2 h depois do primeiro carregamento), são gravados na primeira carga e sobrevivem a recargas.
 
