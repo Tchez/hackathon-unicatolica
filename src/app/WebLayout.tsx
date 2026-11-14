@@ -1,8 +1,10 @@
 import { User as UserIcon } from 'lucide-react'
-import { Link, NavLink, Outlet } from 'react-router'
+import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { MallLogo } from '../components/MallLogo'
 import { PrototypeNotice } from '../components/PrototypeNotice'
 import { useCurrentUser } from '../features/account/accountStore'
+import { LotReleasedNotice } from '../features/offers/components/LotReleasedNotice'
+import { useScrolled } from '../features/offers/components/useScrolled'
 import type { Role } from '../types'
 import { HOME_BY_ROLE } from './roles'
 
@@ -33,17 +35,35 @@ const NAV_BY_ROLE: Record<Role | 'guest', NavItem[]> = {
   ],
 }
 
-/** Layout web (a partir de 1024 px): topo com navegação do perfil e menu de perfil, conteúdo centralizado. */
+/**
+ * Layout web (a partir de 1024 px): topo com navegação do perfil e menu de perfil, conteúdo centralizado.
+ * Na tela inicial (`/` e `/visitor`) o carrossel ocupa a largura e passa por trás do topo, que fica
+ * transparente, com a logo em branco; ao rolar, volta a ser branco, com a logo dourada e sombra leve.
+ */
 export function WebLayout() {
   const user = useCurrentUser()
   const items = NAV_BY_ROLE[user?.role ?? 'guest']
+  const { pathname } = useLocation()
+  const scrolled = useScrolled()
+  const hasCarousel = pathname === '/' || pathname === '/visitor'
+  const transparent = hasCarousel && !scrolled
+
+  const position = hasCarousel ? 'fixed inset-x-0 top-0' : 'sticky top-0'
+  const tone = transparent ? 'text-white' : 'bg-background text-text'
+  // Fora da tela inicial, a linha separa o topo; nela, a sombra ao rolar faz esse papel.
+  const noticeBorder = hasCarousel ? '' : 'border-b border-line'
+  const shadow =
+    hasCarousel && scrolled ? 'shadow-[0_1px_0_var(--color-line),0_4px_12px_rgb(0_0_0/0.06)]' : ''
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-10 bg-background">
+      <header className={`${position} ${tone} ${shadow} z-20 transition-colors duration-200`}>
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-8 px-6">
-          <Link to={user ? HOME_BY_ROLE[user.role] : '/'}>
-            <MallLogo className="h-9" />
+          <Link
+            to={user ? HOME_BY_ROLE[user.role] : '/'}
+            className={transparent ? '[&_span]:text-white' : ''}
+          >
+            <MallLogo onDark={transparent} className="h-9" />
           </Link>
           <nav aria-label="Principal" className="flex flex-1 gap-5 text-sm">
             {items.map((item) => (
@@ -51,24 +71,32 @@ export function WebLayout() {
                 key={item.to + item.label}
                 to={item.to}
                 end
-                className={({ isActive }) =>
-                  isActive ? 'font-semibold text-primary' : 'text-muted hover:text-text'
-                }
+                className={({ isActive }) => {
+                  if (transparent)
+                    return isActive ? 'font-semibold text-white' : 'text-white/85 hover:text-white'
+                  return isActive ? 'font-semibold text-primary' : 'text-muted hover:text-text'
+                }}
               >
                 {item.label}
               </NavLink>
             ))}
           </nav>
-          <Link to="/profile" className="flex items-center gap-2 rounded-card bg-surface px-3 py-2 text-sm">
+          <Link
+            to="/profile"
+            className={`flex min-h-11 items-center gap-2 rounded-card px-3 py-2 text-sm ${transparent ? 'bg-white/20' : 'bg-surface'}`}
+          >
             <UserIcon aria-hidden className="size-4" />
             {user ? user.name : 'Entrar'}
           </Link>
         </div>
-        <div className="border-b border-line">
+        {/* Sobre o carrossel, o aviso fixo vira uma faixa translúcida para continuar legível. */}
+        <div className={transparent ? '[&>p]:bg-black/25 [&>p]:text-white' : noticeBorder}>
           <PrototypeNotice />
         </div>
+        <LotReleasedNotice />
       </header>
-      <main className="mx-auto w-full max-w-5xl flex-1">
+      {/* Na tela inicial, o carrossel ocupa a largura toda; a própria tela centraliza o resto. */}
+      <main className={`w-full flex-1 ${hasCarousel ? '' : 'mx-auto max-w-5xl'}`}>
         <Outlet />
       </main>
     </div>
