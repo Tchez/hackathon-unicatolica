@@ -96,7 +96,7 @@ Nada muda nos dados: continuam simulados e no `localStorage` do navegador, por o
 - [x] A Source do Pages está em GitHub Actions (feito pelo dono do repositório).
 - [x] O workflow roda verde na `main` e o app abre no link; o único 404 é o status do `404.html` em links diretos.
 - [x] Link direto e recarga em uma rota interna (ex.: `/hackathon-unicatolica/visitor/points`) abrem a tela certa.
-- [ ] No celular real, o app instala (Android: Perfil › Instalar app; iPhone: Safari › Adicionar à Tela de Início), abre na página inicial do app e o compartilhamento do código de indicação abre o menu nativo.
+- [x] No celular real, o app instala (Android: Perfil › Instalar app; iPhone: Safari › Adicionar à Tela de Início), abre na página inicial do app e o compartilhamento do código de indicação abre o menu nativo.
 - [x] Um push na `main` publica sozinho; o build só publica depois de lint, testes e build passarem.
 - [x] `npm run dev` abre em `http://localhost:5173/` e `npm run build && npm run preview` em `http://localhost:4173/hackathon-unicatolica/`.
 - [x] README: "Versão publicada" com o link, e "Como executar" com a URL do preview local.
