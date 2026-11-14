@@ -14,32 +14,32 @@ beforeEach(() => {
 describe('vote', () => {
   it('registra um voto e conta na opção escolhida', () => {
     const before = results()
-    const result = community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-tocantinense')
+    const result = community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-flamengo-athletico')
     expect(result.ok).toBe(true)
     const after = results()
     expect(after.total).toBe(before.total + 1)
-    expect(after.options.find((o) => o.optionId === 'option-tocantinense')?.count).toBe(8)
+    expect(after.options.find((o) => o.optionId === 'option-flamengo-athletico')?.count).toBe(13)
   })
 
   it('recusa o segundo voto da mesma pessoa, mesmo em outra opção', () => {
-    community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-brasileirao')
-    expect(community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-tocantinense')).toEqual({
+    community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-mirassol-atletico')
+    expect(community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-flamengo-athletico')).toEqual({
       ok: false,
       error: 'already_voted',
     })
-    expect(results().total).toBe(29)
+    expect(results().total).toBe(28)
   })
 
   it('recusa usuário inválido, votação inexistente e opção inválida', () => {
-    expect(community().vote('user-mall', PROGRAMMING_POLL_ID, 'option-brasileirao')).toEqual({
+    expect(community().vote('user-mall', PROGRAMMING_POLL_ID, 'option-mirassol-atletico')).toEqual({
       ok: false,
       error: 'invalid_user',
     })
-    expect(community().vote('ninguem', PROGRAMMING_POLL_ID, 'option-brasileirao')).toEqual({
+    expect(community().vote('ninguem', PROGRAMMING_POLL_ID, 'option-mirassol-atletico')).toEqual({
       ok: false,
       error: 'invalid_user',
     })
-    expect(community().vote('user-ana', 'nada', 'option-brasileirao')).toEqual({
+    expect(community().vote('user-ana', 'nada', 'option-mirassol-atletico')).toEqual({
       ok: false,
       error: 'poll_not_found',
     })
@@ -52,7 +52,7 @@ describe('vote', () => {
   it('recusa voto depois do prazo', () => {
     const after = new Date(poll().closesAt).getTime() + 1
     expect(getPollStatus(poll(), after)).toBe('closed')
-    expect(community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-brasileirao', after)).toEqual({
+    expect(community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-mirassol-atletico', after)).toEqual({
       ok: false,
       error: 'closed',
     })
@@ -65,7 +65,7 @@ describe('closePoll', () => {
     const result = community().closePoll(PROGRAMMING_POLL_ID)
     expect(result.ok).toBe(true)
     expect(getPollStatus(poll())).toBe('closed')
-    expect(community().vote('user-bruno', PROGRAMMING_POLL_ID, 'option-brasileirao')).toEqual({
+    expect(community().vote('user-bruno', PROGRAMMING_POLL_ID, 'option-mirassol-atletico')).toEqual({
       ok: false,
       error: 'closed',
     })
@@ -79,21 +79,20 @@ describe('closePoll', () => {
 describe('getResults', () => {
   it('calcula contagem, porcentagem e vencedora dos votos iniciais', () => {
     const r = results()
-    expect(r.total).toBe(28)
+    expect(r.total).toBe(27)
     expect(r.options.map((o) => [o.count, o.percent])).toEqual([
-      [12, 43],
-      [9, 32],
-      [7, 25],
+      [15, 56],
+      [12, 44],
     ])
-    expect(r.winnerIds).toEqual(['option-brasileirao'])
+    expect(r.winnerIds).toEqual(['option-mirassol-atletico'])
   })
 
   it('lista as empatadas', () => {
-    community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-copa-do-brasil')
-    community().vote('user-bruno', PROGRAMMING_POLL_ID, 'option-copa-do-brasil')
-    community().vote('user-carla', PROGRAMMING_POLL_ID, 'option-copa-do-brasil')
-    expect(results().options.map((o) => o.count)).toEqual([12, 12, 7])
-    expect(results().winnerIds).toEqual(['option-brasileirao', 'option-copa-do-brasil'])
+    community().vote('user-ana', PROGRAMMING_POLL_ID, 'option-flamengo-athletico')
+    community().vote('user-bruno', PROGRAMMING_POLL_ID, 'option-flamengo-athletico')
+    community().vote('user-carla', PROGRAMMING_POLL_ID, 'option-flamengo-athletico')
+    expect(results().options.map((o) => o.count)).toEqual([15, 15])
+    expect(results().winnerIds).toEqual(['option-mirassol-atletico', 'option-flamengo-athletico'])
   })
 
   it('não tem vencedora sem votos', () => {

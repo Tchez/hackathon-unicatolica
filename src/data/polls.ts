@@ -9,11 +9,11 @@ export function createPolls(now: number): Poll[] {
   return [
     {
       id: PROGRAMMING_POLL_ID,
-      question: 'Qual jogo a Arena Capim transmite no domingo?',
+      question: 'Qual jogo do Brasileirão a Arena Capim transmite no telão?',
+      // Jogos reais da 35ª rodada da Série A 2026 (tabela da CBF): sábado, 14/11, e quarta, 18/11.
       options: [
-        { id: 'option-brasileirao', label: 'Final do Brasileirão' },
-        { id: 'option-copa-do-brasil', label: 'Semifinal da Copa do Brasil' },
-        { id: 'option-tocantinense', label: 'Final do Campeonato Tocantinense' },
+        { id: 'option-mirassol-atletico', label: 'Mirassol x Atlético-MG' },
+        { id: 'option-flamengo-athletico', label: 'Flamengo x Athletico-PR' },
       ],
       closesAt: new Date(now + 24 * HOUR).toISOString(),
     },
@@ -23,9 +23,8 @@ export function createPolls(now: number): Poll[] {
 // Votos de outros visitantes, fictícios (RNF03): ids próprios, que não coincidem com os usuários de exemplo.
 export function createPollVotes(now: number): PollVote[] {
   const counts: Record<string, number> = {
-    'option-brasileirao': 12,
-    'option-copa-do-brasil': 9,
-    'option-tocantinense': 7,
+    'option-mirassol-atletico': 15,
+    'option-flamengo-athletico': 12,
   }
   const createdAt = new Date(now).toISOString()
   const votes: PollVote[] = []

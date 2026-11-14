@@ -61,7 +61,7 @@ Em aberto: priorizar visitantes novos ou ocasionais, ou recompensar os frequente
 | 3 | **Pertencimento e participação** | O público decide entre opções de programação, como qual jogo transmitir, e vê a escolha acontecer | Should: tem muitas possibilidades e exige tempo, melhor não entregar incompleto |
 | 4 | **Marketing e divulgação** | Canais do shopping e dos lojistas, redes sociais, influenciadores, comunidades e programa de indicação | Must: sem divulgação, as campanhas não funcionam |
 
-**Lógica das ofertas de destaque.** Uma oferta de grande apelo e poucas unidades atrai atenção para o conjunto. Exemplo hipotético: cinco placas de vídeo com 60% de desconto atraem mil visitantes; além das cinco vendas, o interesse está nas outras 995 pessoas, que já estão no shopping e podem encontrar ofertas de margem mais sustentável. Os números são ilustrativos. A conversão de quem não resgatou precisa ser validada, e os lotes anunciados devem existir.
+**Lógica das ofertas de destaque.** Uma oferta de grande apelo e poucas unidades atrai atenção para o conjunto. Exemplo hipotético: cinco TVs pela metade do preço atraem mil visitantes; além das cinco vendas, o interesse está nas outras 995 pessoas, que já estão no shopping e podem encontrar ofertas de margem mais sustentável. Os números são ilustrativos. A conversão de quem não resgatou precisa ser validada, e os lotes anunciados devem existir.
 
 **Referência usada.** O Capim Dourado Shopping, em Palmas (TO), foi o exemplo da discussão. Segundo o levantamento da equipe, seu aplicativo tem conta, cupons, promoções, eventos, cinema, pagamento e localização de vaga, mapa, lojas favoritas e QR code; segundo notícias locais, ainda a confirmar, suas campanhas sazonais exigiam valor alto em notas (Natal 2025: R$ 900 em compras). É uma referência exploratória, não um diagnóstico do setor.
 
@@ -205,7 +205,7 @@ Integrações com aplicativos de shopping, consulta de notas e detecção de pre
 
 ## 12. Demonstração
 
-Cenário ilustrativo: uma campanha de 11/11 anuncia cinco placas de vídeo com 60% de desconto em um lote liberado durante o dia, junto de promoções em outras lojas. A visitante chega cedo e circula enquanto aguarda. No lote, ela tenta resgatar: consegue e compra, ou encontra o esgotado e aproveita outra promoção. A compra comprovada gera pontos para a próxima visita.
+Cenário ilustrativo: uma campanha de 11/11 anuncia cinco TVs pela metade do preço em um lote liberado durante o dia, junto de promoções em outras lojas. A visitante chega cedo e circula enquanto aguarda. No lote, ela tenta resgatar: consegue e compra, ou encontra o esgotado e aproveita outra promoção. A compra comprovada gera pontos para a próxima visita.
 
 Critérios propostos:
 

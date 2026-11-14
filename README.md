@@ -37,7 +37,7 @@ Pilares (prioridade no PRD §4) para transformar visitas e compras pontuais em u
 | **3. Pertencimento e participação (bônus)** | O público ajuda a decidir a programação, como qual jogo transmitir. | Fazer o visitante reconhecer sua escolha na programação |
 | **4. Marketing e divulgação** | Canais do shopping e dos lojistas, redes sociais, influenciadores, comunidades e programa de indicação, em que quem indica e quem é indicado ganham pontos. | Fazer as campanhas serem conhecidas |
 
-**Exemplo de uso.** O shopping divulga antecipadamente sua campanha de **11/11**, com **cinco placas de vídeo com 60% de desconto** liberadas em um lote limitado durante o dia, além de promoções em outras lojas. Visitantes chegam cedo e circulam enquanto aguardam. Quem consegue resgata o cupom e compra; quem não consegue aproveita outra promoção, pois já está no local. A compra comprovada gera pontos para a próxima visita. O cenário é ilustrativo: datas, quantidades e descontos não definem regras comerciais.
+**Exemplo de uso.** O shopping divulga antecipadamente sua campanha de **11/11**, com **cinco TVs pela metade do preço** liberadas de surpresa em um lote limitado durante o dia, além de promoções em outras lojas. Visitantes chegam cedo e circulam enquanto aguardam. Quem consegue resgata o cupom e compra; quem não consegue aproveita outra promoção, pois já está no local. A compra comprovada gera pontos para a próxima visita. O cenário é ilustrativo: datas, quantidades e descontos não definem regras comerciais.
 
 ## Como executar
 
@@ -89,14 +89,14 @@ Usuários de exemplo, sem senha. Entre por Perfil › "Entrar ou criar conta" (n
 
 | Jornada | Passo a passo |
 |---|---|
-| J1 · Convidado cria conta | Sem login, abra uma oferta já liberada (a relâmpago do carrossel, ou a placa de vídeo depois da J8) › "Resgatar cupom" › em "Criar conta", digite `BRUNO100` › "Criar conta" (vira a Ana) › volta à oferta e resgata. Com a placa de vídeo ainda "Em breve", "Estou no shopping" também leva a criar conta |
-| J2 · Dia da campanha | Janela A (visitante): na oferta da placa de vídeo, marque "Estou no shopping". A oferta fica "Em breve" até a Administração do shopping clicar "Liberar lote agora" (janela B, `/mall`; quantidade e "Confirmar liberação"). A janela A recebe o aviso no topo (vale 5 min; só aparece para quem marcou presença) › "Resgatar cupom" › "Meus cupons" |
+| J1 · Convidado cria conta | Sem login, abra uma oferta já liberada (a relâmpago do carrossel, ou a TV depois da J8) › "Resgatar cupom" › em "Criar conta", digite `BRUNO100` › "Criar conta" (vira a Ana) › volta à oferta e resgata. Com a TV ainda "Em breve", "Estou no shopping" também leva a criar conta |
+| J2 · Dia da campanha | Janela A (visitante): na oferta da TV, marque "Estou no shopping". A oferta fica "Em breve" até a Administração do shopping clicar "Liberar lote agora" (janela B, `/mall`; quantidade e "Confirmar liberação"). A janela A recebe o aviso no topo (vale 5 min; só aparece para quem marcou presença) › "Resgatar cupom" › "Meus cupons" |
 | J3 · Chegou tarde | Libere um lote de 1 unidade e resgate com outro visitante (Bruno). Com a Ana, abra a oferta: aparece "esgotada" e as alternativas de outras lojas › resgate uma delas |
 | J4 · Compra comprovada | Visitante: Comprovar compra mostra o código de 6 dígitos (vale 10 min). Janela do lojista (TechPlay ou Café Ipê): Confirmar compra › código e valor em reais. O visitante vê "Compra confirmada" e os pontos |
 | J5 · Troca de pontos | Visitante: Pontos › recompensa › confirmar › cupom em "Meus cupons". São 500 pontos para estacionamento ou R$ 10; o Bruno tem 420, então faça antes a J6 (+100) ou uma compra de R$ 800 ou mais na J4 |
 | J6 · Indicação | Bruno: Indicar mostra o `BRUNO100`. Crie a conta com ele (J1, vira a Ana). A Ana gera o código de compra e o lojista confirma (J4): os dois ganham 100 pontos, uma única vez |
 | J7 · Oferta relâmpago | Lojista: "Criar oferta relâmpago" › produto, desconto, duração (1 e 3 min só para a demonstração) e quantidade › "Publicar oferta". O visitante a vê com contagem; ela encerra ao esgotar ou expirar. O lojista só encerra as próprias ofertas relâmpago, não as da campanha |
-| J8 · Lote liberado | Shopping: `/mall` › "Liberar lote agora" na placa de vídeo. O visitante vê o lote liberado, com a contagem de estoque ao vivo |
+| J8 · Lote liberado | Shopping: `/mall` › "Liberar lote agora" na TV. O visitante vê o lote liberado, com a contagem de estoque ao vivo |
 | J9 · Votação | Visitante: atalho "Votar" › escolher uma opção › "Confirmar voto" › resultado em porcentagem. Shopping: `/mall` › cartão "Votação da programação" › "Encerrar votação" › o visitante vê a opção vencedora |
 
 Detalhes das jornadas e telas no [design](docs/design.md#5-jornadas).

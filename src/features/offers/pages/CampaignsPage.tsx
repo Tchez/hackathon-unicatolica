@@ -38,7 +38,9 @@ export function CampaignsPage() {
         return (
           <article key={campaign.id} aria-labelledby={`campaign-${campaign.id}`} className="mt-4">
             <div className="rounded-card bg-linear-to-br from-primary-dark via-primary to-gold p-4 text-white">
-              <p className="text-xs font-semibold uppercase tracking-wider opacity-90">Campanha recorrente</p>
+              <p className="text-xs font-semibold uppercase tracking-wider opacity-90">
+                Campanha de data dupla
+              </p>
               <h2 id={`campaign-${campaign.id}`} className="mt-1 text-[22px] font-bold leading-tight">
                 {campaign.name}
               </h2>
