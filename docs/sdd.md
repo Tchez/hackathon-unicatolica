@@ -4,7 +4,7 @@
 
 Como o MVP é construído. O **que** e o **porquê** estão no [PRD](prd.md); as decisões técnicas ficam na seção 8. Este documento precisa refletir o código entregue e define as convenções de código que todos seguem (seção 9).
 
-> **Status:** stack e convenções definidas no épico E4 e implementadas na base do projeto ([SPEC 001](specs/001-base-do-projeto.md)). Itens marcados com ⏳ ainda dependem de decisão.
+> **Status:** implementado (specs 001 a 009) e publicado no GitHub Pages ([SPEC 008](specs/008-deploy-github-pages.md)).
 
 ## 1. Escopo técnico
 
