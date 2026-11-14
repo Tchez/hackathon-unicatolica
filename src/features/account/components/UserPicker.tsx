@@ -1,35 +1,42 @@
 import { useNavigate } from 'react-router'
 import { HOME_BY_ROLE, ROLE_LABELS } from '../../../app/roles'
-import { SimulatedBadge } from '../../../components/SimulatedBadge'
+import type { Role } from '../../../types'
 import { useAccountStore } from '../accountStore'
 
-/** Lista de usuários de exemplo, sem senha: escolher um entra no perfil dele. */
+const ROLE_ORDER: Role[] = ['visitor', 'merchant', 'mall']
+
+/** Usuários de exemplo agrupados por perfil, sem senha: escolher um entra na tela inicial do perfil dele. */
 export function UserPicker() {
   const users = useAccountStore((state) => state.users)
   const login = useAccountStore((state) => state.login)
   const navigate = useNavigate()
 
   return (
-    <div>
-      <p className="mb-3 flex items-center gap-2 text-sm text-muted">
-        Escolha um usuário de exemplo, sem senha <SimulatedBadge />
-      </p>
-      <ul className="flex flex-col gap-2">
-        {users.map((user) => (
-          <li key={user.id}>
-            <button
-              type="button"
-              onClick={() => {
-                if (login(user.id)) navigate(HOME_BY_ROLE[user.role])
-              }}
-              className="flex min-h-12 w-full flex-col items-start rounded-card bg-surface px-4 py-2 text-left"
-            >
-              <span className="font-medium">{user.name}</span>
-              <span className="text-xs text-muted">{ROLE_LABELS[user.role]}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col gap-5">
+      {ROLE_ORDER.map((role) => {
+        const group = users.filter((user) => user.role === role)
+        if (group.length === 0) return null
+        return (
+          <div key={role}>
+            <h3 className="mb-2 text-sm font-semibold text-muted">{ROLE_LABELS[role]}</h3>
+            <ul className="flex flex-col gap-2">
+              {group.map((user) => (
+                <li key={user.id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (login(user.id)) navigate(HOME_BY_ROLE[user.role])
+                    }}
+                    className="flex min-h-12 w-full items-center rounded-card bg-surface px-4 py-2 text-left font-medium hover:bg-primary-soft"
+                  >
+                    {user.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      })}
     </div>
   )
 }
