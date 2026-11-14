@@ -56,7 +56,7 @@ flowchart LR
 | Ícones | `lucide-react` |
 | Testes | Vitest, para as regras puras |
 | Qualidade | ESLint (typescript-eslint, regras de hooks) e Prettier |
-| Publicação | ⏳ Hospedagem estática com HTTPS, necessária para instalar o PWA (seção 7) |
+| Publicação | GitHub Pages por GitHub Actions, HTTPS para instalar o PWA (seção 7) |
 
 Versões no `package.json`; requer Node.js 20.19+, 22.13+ ou 24+. O TypeScript fica na série 6.0, a mais nova aceita pelo typescript-eslint. Motivos e alternativas na seção 8.
 
@@ -120,7 +120,7 @@ Exigência do RNF03: tudo o que for simulado aparece como simulação na interfa
 
 Instalação e execução no [README](../README.md#como-executar).
 
-- O build gera arquivos estáticos em `dist/`. ⏳ Hospedagem e link público a decidir; a recomendação é a Vercel, conectada ao repositório, com `main` como produção.
+- O build gera arquivos estáticos em `dist/`, publicados no GitHub Pages por GitHub Actions, em `https://tchez.github.io/hackathon-unicatolica/` (subcaminho, `base` do Vite e `basename` do roteador). Push na `main` publica; o disparo manual publica outra branch. Links diretos funcionam por `404.html`, cópia do `index.html`. Detalhes na [SPEC 008](specs/008-deploy-github-pages.md).
 - O service worker só funciona em HTTPS ou em `localhost` (`npm run build && npm run preview`), nunca sob `npm run dev`. Para instalar no celular, é preciso o link publicado; o service worker atualiza o app aberto após uma nova publicação.
 - A ação "Restaurar dados de demonstração" (módulo `account`, no perfil) grava os dados iniciais em todos os stores e encerra a sessão da aba que a acionou, para cada demonstração começar igual. Os dados de demonstração são relativos ao tempo (a campanha termina 24 h e as ofertas relâmpago 2 h depois do primeiro carregamento), são gravados na primeira carga e sobrevivem a recargas.
 
@@ -140,6 +140,7 @@ Instalação e execução no [README](../README.md#como-executar).
 | 14/11/2026 | Consentimento de marketing em store próprio (`account/marketingConsentStore.ts`), fora de `User` | O consentimento é guardado por usuário, desligado por padrão (RNF05), e o `User` do modelo não guarda esse dado; o store entra no registro, então restaurar os dados o desliga | Campo `marketingConsent` em `User` |
 | 14/11/2026 | Bônus de indicação creditado na primeira compra comprovada depois do registro da indicação, uma única vez | Na demonstração a Ana pode já ter compras quando cria a conta com `BRUNO100`; só a compra posterior ao registro conta (F27) | Creditar no registro da indicação; creditar na primeira compra da pessoa em qualquer data |
 | 14/11/2026 | Depois do login, voltar à tela protegida que a pessoa tentou abrir, em qualquer perfil; sem origem, à tela inicial do perfil | Quem tenta resgatar sem conta retoma a oferta (J1) em vez de recomeçar | Sempre ir à tela inicial do perfil |
+| 14/11/2026 | Publicação no GitHub Pages por GitHub Actions, no subcaminho `/hackathon-unicatolica/`, com `404.html` para links diretos (SPEC 008) | Gratuito, sem conta nova nem configuração externa, HTTPS para instalar o PWA e testar o compartilhamento no celular; o repositório já está no GitHub | Vercel: preview por PR e domínio fácil, mas exige conta e vínculo com o repositório; HashRouter: evita o `404.html`, mas deixa as URLs com `#` |
 
 ## 9. Convenções de código
 
